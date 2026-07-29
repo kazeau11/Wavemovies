@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 450" fill="none" aria-hidden="true">
+  <rect width="300" height="450" rx="16" fill="#102847"/>
+  <defs>
+    <linearGradient id="pg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b82f6" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#2563eb" stop-opacity="0.1"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="450" rx="16" fill="url(#pg)"/>
+  <path d="M80 280C120 220 140 220 180 280C220 340 240 340 280 280" stroke="#3b82f6" stroke-width="4" stroke-linecap="round" fill="none" opacity="0.5"/>
+  <circle cx="150" cy="180" r="40" stroke="#2563eb" stroke-width="2" fill="none" opacity="0.4"/>
+  <text x="150" y="360" text-anchor="middle" font-family="system-ui" font-size="16" fill="#64748b">No Poster</text>
+</svg>
