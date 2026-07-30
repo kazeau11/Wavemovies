@@ -9,6 +9,32 @@ export function HydrationGuard() {
     <Script id="hydration-extension-guard" strategy="beforeInteractive">
       {`
 (function () {
+  var LEGACY_KEYS = ["wave-profiles", "wave-watchlist-v2", "wave-continue-watching-v2"];
+  for (var i = 0; i < LEGACY_KEYS.length; i++) {
+    try { localStorage.removeItem(LEGACY_KEYS[i]); } catch (e) {}
+  }
+
+  var STORAGE_KEYS = ["wave-watchlist", "wave-continue-watching"];
+  for (var j = 0; j < STORAGE_KEYS.length; j++) {
+    var storageKey = STORAGE_KEYS[j];
+    try {
+      var raw = localStorage.getItem(storageKey);
+      if (!raw) continue;
+      var parsed = JSON.parse(raw);
+      var state = parsed && parsed.state;
+      if (
+        !state ||
+        typeof state !== "object" ||
+        state.byProfile != null ||
+        (state.items != null && !Array.isArray(state.items))
+      ) {
+        localStorage.removeItem(storageKey);
+      }
+    } catch (e) {
+      try { localStorage.removeItem(storageKey); } catch (err) {}
+    }
+  }
+
   var ATTRS = ["bis_skin_checked", "bis_register"];
   function strip(node) {
     if (!node || node.nodeType !== 1) return;
