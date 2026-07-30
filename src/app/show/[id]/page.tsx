@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { notFound } from "next/navigation";
-import { Play, Star, Tv } from "lucide-react";
+import { Play, Tv } from "lucide-react";
 import { getTVProvider } from "@/lib/catalogue";
 import { ShowRow } from "@/components/shows/ShowRow";
 import { EpisodeList } from "@/components/shows/EpisodeList";
-import { formatRating } from "@/lib/video/player";
 import { PAGE_X } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
@@ -71,12 +70,6 @@ export default async function ShowPage({ params }: ShowPageProps) {
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/75">
               {show.releaseYear > 0 && <span>{show.releaseYear}</span>}
-              {show.rating > 0 && (
-                <span className="flex items-center gap-1.5 font-medium">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  {formatRating(show.rating)}
-                </span>
-              )}
               {show.numberOfSeasons > 0 && (
                 <span className="flex items-center gap-1.5">
                   <Tv className="h-4 w-4 text-white/50" />

@@ -3,9 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
-import { Play, Info, Star } from "lucide-react";
+import { Play, Info } from "lucide-react";
 import type { Movie } from "@/lib/catalogue/types";
-import { formatRating } from "@/lib/video/player";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { PAGE_PL } from "@/lib/layout";
 import { cn } from "@/lib/utils";
@@ -92,12 +91,6 @@ export function HeroSection({ movies }: HeroSectionProps) {
             </h1>
 
             <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-white/75">
-              {movie.rating > 0 && (
-                <span className="flex items-center gap-1 font-medium">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  {formatRating(movie.rating)}
-                </span>
-              )}
               {movie.releaseYear > 0 && <span>{movie.releaseYear}</span>}
               <span className="rounded border border-white/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/90">
                 HD

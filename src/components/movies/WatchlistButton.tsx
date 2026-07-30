@@ -2,6 +2,7 @@
 
 import { Plus, Check } from "lucide-react";
 import type { Movie } from "@/lib/catalogue/types";
+import { useProfiles } from "@/lib/storage/profiles";
 import { useWatchlist } from "@/lib/storage/watchlist";
 import { useHasMounted } from "@/lib/hooks/use-has-mounted";
 import { cn } from "@/lib/utils";
@@ -12,8 +13,9 @@ interface WatchlistButtonProps {
 
 export function WatchlistButton({ movie }: WatchlistButtonProps) {
   const mounted = useHasMounted();
+  const profileId = useProfiles((state) => state.activeProfileId);
   const { isInWatchlist, toggleItem } = useWatchlist();
-  const inList = mounted && isInWatchlist(movie.id);
+  const inList = mounted && profileId && isInWatchlist(movie.id);
 
   return (
     <button

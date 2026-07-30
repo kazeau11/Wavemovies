@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Play, Star, Plus, Check } from "lucide-react";
+import { Play, Plus, Check } from "lucide-react";
 import type { Movie } from "@/lib/catalogue/types";
-import { formatRating } from "@/lib/video/player";
+import { useProfiles } from "@/lib/storage/profiles";
 import { useWatchlist } from "@/lib/storage/watchlist";
 import { useHasMounted } from "@/lib/hooks/use-has-mounted";
 import { WaveImage } from "@/components/ui/WaveImage";
@@ -26,8 +26,9 @@ export function MovieCard({
   variant = "poster",
 }: MovieCardProps) {
   const mounted = useHasMounted();
+  const profileId = useProfiles((state) => state.activeProfileId);
   const { isInWatchlist, toggleItem } = useWatchlist();
-  const inList = mounted && isInWatchlist(movie.id);
+  const inList = mounted && profileId && isInWatchlist(movie.id);
   const isLandscape = variant === "landscape";
 
   const imageSrc = isLandscape
@@ -93,13 +94,6 @@ export function MovieCard({
               <Play className="h-5 w-5 fill-white text-white" />
             </div>
           </div>
-
-          {!isLandscape && movie.rating > 0 && (
-            <div className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-black/60 px-2 py-0.5 text-xs font-medium backdrop-blur-sm">
-              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              {formatRating(movie.rating)}
-            </div>
-          )}
         </div>
 
         {!isLandscape && (

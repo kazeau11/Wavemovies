@@ -3,13 +3,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Bookmark, Trash2 } from "lucide-react";
-import { useWatchlist } from "@/lib/storage/watchlist";
+import { useWatchlist, useWatchlistItems } from "@/lib/storage/watchlist";
 import { Button } from "@/components/ui/Button";
-import { formatRating } from "@/lib/video/player";
-import { Star } from "lucide-react";
 
 export default function WatchlistPage() {
-  const { items, removeItem, clearAll } = useWatchlist();
+  const items = useWatchlistItems();
+  const { removeItem, clearAll } = useWatchlist();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -61,15 +60,9 @@ export default function WatchlistPage() {
                       {item.title}
                     </h3>
                   </Link>
-                  <div className="mt-1 flex items-center gap-2 text-xs text-wave-muted">
-                    {item.releaseYear > 0 && <span>{item.releaseYear}</span>}
-                    {item.rating > 0 && (
-                      <span className="flex items-center gap-0.5">
-                        <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        {formatRating(item.rating)}
-                      </span>
-                    )}
-                  </div>
+                  {item.releaseYear > 0 && (
+                    <p className="mt-1 text-xs text-wave-muted">{item.releaseYear}</p>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Link href={`/watch/${item.movieId}`}>

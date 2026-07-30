@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+import { getActiveProfileId, useProfiles } from "@/lib/storage/profiles";
 
 export interface WatchlistItem {
   movieId: string;
@@ -12,7 +13,7 @@ export interface WatchlistItem {
 }
 
 interface WatchlistState {
-  items: WatchlistItem[];
+  byProfile: Record<string, WatchlistItem[]>;
   isInWatchlist: (movieId: string) => boolean;
   addItem: (item: Omit<WatchlistItem, "addedAt">) => void;
   removeItem: (movieId: string) => void;
@@ -20,19 +21,51 @@ interface WatchlistState {
   clearAll: () => void;
 }
 
+type LegacyWatchlistState = { items?: WatchlistItem[] };
+
 export const useWatchlist = create<WatchlistState>()(
   persist(
     (set, get) => ({
-      items: [],
-      isInWatchlist: (movieId) => get().items.some((i) => i.movieId === movieId),
+      byProfile: {},
+
+      isInWatchlist: (movieId) => {
+        const profileId = getActiveProfileId();
+        if (!profileId) return false;
+        return (get().byProfile[profileId] ?? []).some(
+          (item) => item.movieId === movieId
+        );
+      },
+
       addItem: (item) => {
-        if (get().isInWatchlist(item.movieId)) return;
+        const profileId = getActiveProfileId();
+        if (!profileId || get().isInWatchlist(item.movieId)) return;
+
+        const current = get().byProfile[profileId] ?? [];
         set({
-          items: [{ ...item, addedAt: new Date().toISOString() }, ...get().items],
+          byProfile: {
+            ...get().byProfile,
+            [profileId]: [
+              { ...item, addedAt: new Date().toISOString() },
+              ...current,
+            ],
+          },
         });
       },
-      removeItem: (movieId) =>
-        set({ items: get().items.filter((i) => i.movieId !== movieId) }),
+
+      removeItem: (movieId) => {
+        const profileId = getActiveProfileId();
+        if (!profileId) return;
+
+        set({
+          byProfile: {
+            ...get().byProfile,
+            [profileId]: (get().byProfile[profileId] ?? []).filter(
+              (item) => item.movieId !== movieId
+            ),
+          },
+        });
+      },
+
       toggleItem: (item) => {
         if (get().isInWatchlist(item.movieId)) {
           get().removeItem(item.movieId);
@@ -40,8 +73,41 @@ export const useWatchlist = create<WatchlistState>()(
           get().addItem(item);
         }
       },
-      clearAll: () => set({ items: [] }),
+
+      clearAll: () => {
+        const profileId = getActiveProfileId();
+        if (!profileId) return;
+
+        set({
+          byProfile: {
+            ...get().byProfile,
+            [profileId]: [],
+          },
+        });
+      },
     }),
-    { name: "wave-watchlist" }
+    {
+      name: "wave-watchlist-v2",
+      migrate: (persisted) => {
+        const state = persisted as LegacyWatchlistState & WatchlistState;
+        if (state.byProfile) return state;
+
+        const legacyItems = state.items ?? [];
+        const profileId = getActiveProfileId();
+        if (!profileId || legacyItems.length === 0) {
+          return { byProfile: {} };
+        }
+
+        return { byProfile: { [profileId]: legacyItems } };
+      },
+      version: 1,
+    }
   )
 );
+
+export function useWatchlistItems() {
+  const profileId = useProfiles((state) => state.activeProfileId);
+  return useWatchlist((state) =>
+    profileId ? state.byProfile[profileId] ?? [] : []
+  );
+}

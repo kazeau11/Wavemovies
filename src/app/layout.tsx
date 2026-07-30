@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MainContent } from "@/components/layout/MainContent";
 import { HydrationGuard } from "@/components/providers/HydrationGuard";
+import { ProfileGate } from "@/components/profiles/ProfileGate";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <HydrationGuard />
+        <ProfileGate />
         <Navbar />
         <MainContent>{children}</MainContent>
         <Footer />

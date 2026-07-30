@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { notFound } from "next/navigation";
-import { Play, Star, Clock } from "lucide-react";
+import { Play, Clock } from "lucide-react";
 import { getCatalogueProvider } from "@/lib/catalogue";
 import { MovieRow } from "@/components/movies/MovieRow";
 import { WatchlistButton } from "@/components/movies/WatchlistButton";
-import { formatRating, formatRuntime } from "@/lib/video/player";
+import { formatRuntime } from "@/lib/video/player";
 import { PAGE_X } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
@@ -70,12 +70,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
 
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/75">
               {movie.releaseYear > 0 && <span>{movie.releaseYear}</span>}
-              {movie.rating > 0 && (
-                <span className="flex items-center gap-1.5 font-medium">
-                  <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                  {formatRating(movie.rating)}
-                </span>
-              )}
               {movie.runtime && (
                 <span className="flex items-center gap-1.5">
                   <Clock className="h-4 w-4 text-white/50" />

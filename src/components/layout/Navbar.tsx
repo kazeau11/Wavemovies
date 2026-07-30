@@ -5,10 +5,13 @@ import { usePathname } from "next/navigation";
 import { WaveLogo } from "@/components/ui/WaveLogo";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { PAGE_X } from "@/lib/layout";
+import { useProfiles } from "@/lib/storage/profiles";
+import { ProfileAvatar } from "@/components/profiles/ProfileAvatar";
+import { useHasMounted } from "@/lib/hooks/use-has-mounted";
 
 const navLinks = [
   { href: "/", label: "Home" },
@@ -23,6 +26,8 @@ const navLinks = [
 
 export function Navbar() {
   const pathname = usePathname();
+  const mounted = useHasMounted();
+  const activeProfile = useProfiles((state) => state.getActiveProfile());
   const [mobileOpen, setMobileOpen] = useState(false);
   const isCinematic =
     pathname === "/" ||
@@ -78,7 +83,11 @@ export function Navbar() {
             className="hidden h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-white/10 bg-white/5 transition-colors hover:bg-white/10 sm:flex"
             aria-label="Profile"
           >
-            <User className="h-4 w-4 text-white/60" />
+            {mounted && activeProfile ? (
+              <ProfileAvatar avatarId={activeProfile.avatarId} size="sm" className="h-9 w-9 text-base" />
+            ) : (
+              <span className="h-4 w-4 rounded-full bg-white/20" />
+            )}
           </Link>
           <button
             type="button"

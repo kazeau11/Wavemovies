@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Play, Star } from "lucide-react";
+import { Play } from "lucide-react";
 import type { TVShow } from "@/lib/catalogue/types";
-import { formatRating } from "@/lib/video/player";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { cn } from "@/lib/utils";
 
@@ -76,13 +75,6 @@ export function ShowCard({
               <Play className="h-5 w-5 fill-white text-white" />
             </div>
           </div>
-
-          {!isLandscape && show.rating > 0 && (
-            <div className="absolute right-2 top-2 flex items-center gap-1 rounded-md bg-black/60 px-2 py-0.5 text-xs font-medium backdrop-blur-sm">
-              <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-              {formatRating(show.rating)}
-            </div>
-          )}
         </div>
 
         {!isLandscape && (
