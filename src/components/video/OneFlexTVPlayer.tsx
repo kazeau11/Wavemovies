@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getOneFlexTVEmbedUrl } from "@/lib/oneflex";
-import { EmbedFrame } from "@/components/video/EmbedFrame";
 
 interface OneFlexTVPlayerProps {
   showId: string;
@@ -13,6 +12,7 @@ interface OneFlexTVPlayerProps {
   className?: string;
 }
 
+/** TV uses the same inline iframe player as movies. */
 export function OneFlexTVPlayer({
   showId,
   season,
@@ -48,10 +48,13 @@ export function OneFlexTVPlayer({
       )}
       style={{ aspectRatio: "16 / 9", minHeight: "min(72vh, 820px)" }}
     >
-      <EmbedFrame
+      <iframe
         key={`${showId}-${season}-${episode}`}
         src={embedUrl}
         title={title}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+        allowFullScreen
+        className="absolute inset-0 h-full w-full border-0"
       />
     </div>
   );

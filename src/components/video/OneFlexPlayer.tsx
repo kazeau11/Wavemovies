@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getOneFlexEmbedUrl } from "@/lib/oneflex";
-import { EmbedFrame } from "@/components/video/EmbedFrame";
 
 interface OneFlexPlayerProps {
   movieId: string;
@@ -27,7 +26,14 @@ export function OneFlexPlayer({ movieId, title, className }: OneFlexPlayerProps)
       style={{ aspectRatio: "16 / 9", minHeight: "min(72vh, 820px)" }}
     >
       {embedUrl ? (
-        <EmbedFrame key={movieId} src={embedUrl} title={title} />
+        <iframe
+          key={movieId}
+          src={embedUrl}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full border-0"
+        />
       ) : (
         <div className="flex h-full items-center justify-center">
           <div className="h-10 w-10 animate-spin rounded-full border-2 border-wave-accent border-t-transparent" />

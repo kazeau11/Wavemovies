@@ -10,8 +10,8 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
   },
   MAIN_2: {
     label: "Main 2",
-    movie: "https://player.videasy.to/movie/{id}?color=22d3ee&overlay=false",
-    tv: "https://player.videasy.to/tv/{id}/{season}/{episode}?color=22d3ee&overlay=false",
+    movie: "https://player.videasy.to/movie/{id}?color=22d3ee&overlay=true",
+    tv: "https://player.videasy.to/tv/{id}/{season}/{episode}?color=22d3ee&overlay=true",
   },
   MAIN_3: {
     label: "Main 3",
@@ -49,7 +49,7 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
 
 export const ONEFLEX_EMBED_SERVER_IDS = Object.keys(ONEFLEX_EMBED_PROVIDERS);
 
-/** Default embed server (Vidfast — minimal UI, fewer outbound links). */
+/** Default embed server (Videasy — same as original Wave setup). */
 export function getOneFlexEmbedUrl(movieId: string, serverId?: string): string {
   const custom =
     typeof window === "undefined"
@@ -64,10 +64,10 @@ export function getOneFlexEmbedUrl(movieId: string, serverId?: string): string {
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_3";
+    "MAIN_2";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_3;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
   return provider.movie.replace("{id}", movieId);
 }
 
@@ -94,10 +94,10 @@ export function getOneFlexTVEmbedUrl(
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_3";
+    "MAIN_2";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_3;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
   return provider.tv
     .replace("{id}", showId)
     .replace("{season}", String(season))

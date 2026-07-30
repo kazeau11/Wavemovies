@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import type { PlaybackSource } from "@/lib/video/player";
 import { cn } from "@/lib/utils";
-import { EmbedFrame } from "@/components/video/EmbedFrame";
 
 interface VideoPlayerProps {
   source: PlaybackSource;
@@ -62,7 +61,13 @@ export function VideoPlayer({
           className
         )}
       >
-        <EmbedFrame src={source.url} title={title} />
+        <iframe
+          src={source.url}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full border-0"
+        />
       </div>
     );
   }
