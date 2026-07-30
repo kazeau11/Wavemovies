@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { PlaybackSource } from "@/lib/video/player";
 import { cn } from "@/lib/utils";
+import { SecureEmbedFrame } from "./SecureEmbedFrame";
 
 interface VideoPlayerProps {
   source: PlaybackSource;
@@ -55,15 +56,11 @@ export function VideoPlayer({
 
   if (source.type === "embed") {
     return (
-      <div className={cn("relative aspect-video w-full overflow-hidden rounded-2xl bg-black", className)}>
-        <iframe
-          src={source.url}
-          title={title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full border-0"
-        />
-      </div>
+      <SecureEmbedFrame
+        src={source.url}
+        title={title}
+        className={cn("rounded-2xl", className)}
+      />
     );
   }
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getOneFlexTVEmbedUrl } from "@/lib/oneflex";
+import { SecureEmbedFrame } from "./SecureEmbedFrame";
 
 interface OneFlexTVPlayerProps {
   showId: string;
@@ -25,28 +26,19 @@ export function OneFlexTVPlayer({
     setEmbedUrl(getOneFlexTVEmbedUrl(showId, season, episode));
   }, [showId, season, episode]);
 
-  return (
-    <div
-      className={cn(
-        "relative w-full overflow-hidden rounded-xl bg-black shadow-2xl shadow-black/60 ring-1 ring-white/10",
-        className
-      )}
-      style={{ aspectRatio: "16 / 9", minHeight: "min(72vh, 820px)" }}
-    >
-      {embedUrl ? (
-        <iframe
-          key={`${showId}-${season}-${episode}`}
-          src={embedUrl}
-          title={title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          allowFullScreen
-          className="absolute inset-0 h-full w-full border-0"
-        />
-      ) : (
-        <div className="flex h-full items-center justify-center">
-          <div className="h-10 w-10 animate-spin rounded-full border-2 border-wave-accent border-t-transparent" />
-        </div>
-      )}
-    </div>
-  );
+  if (!embedUrl) {
+    return (
+      <div
+        className={cn(
+          "relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-black",
+          className
+        )}
+        style={{ aspectRatio: "16 / 9", minHeight: "min(72vh, 820px)" }}
+      >
+        <div className="h-10 w-10 animate-spin rounded-full border-2 border-wave-accent border-t-transparent" />
+      </div>
+    );
+  }
+
+  return <SecureEmbedFrame src={embedUrl} title={title} className={className} />;
 }
