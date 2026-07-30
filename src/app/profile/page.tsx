@@ -84,9 +84,14 @@ export default function ProfilePage() {
         </section>
       )}
 
-      <Link href="/watchlist">
-        <Button variant="secondary">View Watchlist</Button>
-      </Link>
+      <div className="flex flex-wrap gap-3">
+        <Link href="/watchlist">
+          <Button variant="secondary">View Watchlist</Button>
+        </Link>
+        <Link href="/about">
+          <Button variant="outline">About</Button>
+        </Link>
+      </div>
     </div>
   );
 }

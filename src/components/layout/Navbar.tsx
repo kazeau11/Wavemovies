@@ -18,6 +18,7 @@ const navLinks = [
   { href: "/movies?section=trending", label: "Trending" },
   { href: "/movies?section=top-rated", label: "Top Rated" },
   { href: "/watchlist", label: "My List" },
+  { href: "/about", label: "About" },
 ];
 
 export function Navbar() {
