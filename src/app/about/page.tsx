@@ -10,7 +10,7 @@ const highlights = [
   {
     icon: Tv,
     title: "Movies & TV, one place",
-    text: "No jumping between apps. Browse films, binge series, search it all together, and pick up right where you left off.",
+    text: "No jumping between apps. Browse films, binge series, and search it all together in one clean place.",
   },
   {
     icon: Zap,
@@ -20,7 +20,7 @@ const highlights = [
   {
     icon: Sparkles,
     title: "Made for movie nights",
-    text: "Watchlists, continue watching, genres, and rows curated like a real streaming platform — because Wave is one.",
+    text: "Genres, trending rows, and a cinematic layout built like a real streaming platform — because Wave is one.",
   },
 ];
 

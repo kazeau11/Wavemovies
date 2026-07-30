@@ -8,7 +8,6 @@ import type { Movie } from "@/lib/catalogue/types";
 import { VideoPlayer } from "@/components/video/VideoPlayer";
 import { OneFlexPlayer } from "@/components/video/OneFlexPlayer";
 import { resolvePlaybackSource } from "@/lib/video/player";
-import { useContinueWatching } from "@/lib/storage/continue-watching";
 import { PAGE_X } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
@@ -18,7 +17,6 @@ export default function WatchPage() {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { updateProgress } = useContinueWatching();
 
   useEffect(() => {
     if (!movieId) {
@@ -97,16 +95,6 @@ export default function WatchPage() {
             title={movie.title}
             posterUrl={movie.backdropUrl || movie.posterUrl}
             className="min-h-[min(72vh,820px)]"
-            onProgress={(progress, duration) => {
-              updateProgress({
-                movieId: movie.id,
-                title: movie.title,
-                posterUrl: movie.posterUrl,
-                backdropUrl: movie.backdropUrl,
-                progress,
-                duration,
-              });
-            }}
           />
         )}
       </div>

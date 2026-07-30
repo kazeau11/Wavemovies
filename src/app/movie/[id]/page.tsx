@@ -4,7 +4,6 @@ import { notFound } from "next/navigation";
 import { Play, Clock } from "lucide-react";
 import { getCatalogueProvider } from "@/lib/catalogue";
 import { MovieRow } from "@/components/movies/MovieRow";
-import { WatchlistButton } from "@/components/movies/WatchlistButton";
 import { formatRuntime } from "@/lib/video/player";
 import { PAGE_X } from "@/lib/layout";
 import { cn } from "@/lib/utils";
@@ -107,7 +106,6 @@ export default async function MoviePage({ params }: MoviePageProps) {
                 <Play className="h-5 w-5 fill-wave-bg text-wave-bg" />
                 Watch Now
               </Link>
-              <WatchlistButton movie={movie} />
             </div>
           </div>
         </div>

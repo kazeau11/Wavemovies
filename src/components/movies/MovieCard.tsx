@@ -2,17 +2,14 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Play, Plus, Check } from "lucide-react";
+import { Play } from "lucide-react";
 import type { Movie } from "@/lib/catalogue/types";
-import { useWatchlist } from "@/lib/storage/watchlist";
-import { useHasMounted } from "@/lib/hooks/use-has-mounted";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { cn } from "@/lib/utils";
 
 interface MovieCardProps {
   movie: Movie;
   index?: number;
-  showProgress?: number;
   className?: string;
   variant?: "poster" | "landscape";
 }
@@ -20,13 +17,9 @@ interface MovieCardProps {
 export function MovieCard({
   movie,
   index = 0,
-  showProgress,
   className,
   variant = "poster",
 }: MovieCardProps) {
-  const mounted = useHasMounted();
-  const { isInWatchlist, toggleItem } = useWatchlist();
-  const inList = mounted && isInWatchlist(movie.id);
   const isLandscape = variant === "landscape";
 
   const imageSrc = isLandscape
@@ -78,15 +71,6 @@ export function MovieCard({
             </div>
           )}
 
-          {showProgress !== undefined && showProgress > 0 && (
-            <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/20">
-              <div
-                className="h-full bg-wave-accent"
-                style={{ width: `${Math.min(showProgress * 100, 100)}%` }}
-              />
-            </div>
-          )}
-
           <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-all duration-300 group-hover:opacity-100">
             <div className="flex h-12 w-12 items-center justify-center rounded-full bg-black/50 backdrop-blur-sm">
               <Play className="h-5 w-5 fill-white text-white" />
@@ -106,32 +90,6 @@ export function MovieCard({
           </div>
         )}
       </Link>
-
-      {!isLandscape && (
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            toggleItem({
-              movieId: movie.id,
-              title: movie.title,
-              posterUrl: movie.posterUrl,
-              backdropUrl: movie.backdropUrl,
-              releaseYear: movie.releaseYear,
-              rating: movie.rating,
-            });
-          }}
-          className={cn(
-            "absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full backdrop-blur-sm transition-all duration-200",
-            inList
-              ? "bg-wave-accent text-wave-bg"
-              : "bg-black/60 text-white opacity-0 group-hover:opacity-100 hover:bg-black/80"
-          )}
-          aria-label={inList ? "Remove from watchlist" : "Add to watchlist"}
-        >
-          {inList ? <Check className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />}
-        </button>
-      )}
     </motion.div>
   );
 }

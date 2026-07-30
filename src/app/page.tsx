@@ -3,7 +3,6 @@ import { TV_CLASSIC_IDS } from "@/lib/catalogue/tv-classics";
 import { HeroSection } from "@/components/movies/HeroSection";
 import { MovieRow } from "@/components/movies/MovieRow";
 import { ShowRow } from "@/components/shows/ShowRow";
-import { ContinueWatchingSection } from "@/components/movies/ContinueWatchingSection";
 import { PAGE_PL } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
@@ -58,8 +57,6 @@ export default async function HomePage() {
       )}
 
       <div className="-mt-6 space-y-8 sm:-mt-8 sm:space-y-10">
-        <ContinueWatchingSection variant="poster" />
-
         <MovieRow
           title="Trending Movies"
           movies={trendingMovies}

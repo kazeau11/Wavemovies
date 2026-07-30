@@ -12,7 +12,6 @@ interface MovieRowProps {
   title: string;
   movies: Movie[];
   href?: string;
-  progressMap?: Record<string, number>;
   className?: string;
   variant?: "poster" | "landscape";
 }
@@ -21,7 +20,6 @@ export function MovieRow({
   title,
   movies,
   href,
-  progressMap,
   className,
   variant = "poster",
 }: MovieRowProps) {
@@ -84,12 +82,7 @@ export function MovieRow({
         >
           {movies.map((movie, index) => (
             <div key={movie.id} className={cardWidth}>
-              <MovieCard
-                movie={movie}
-                index={index}
-                variant={variant}
-                showProgress={progressMap?.[movie.id]}
-              />
+              <MovieCard movie={movie} index={index} variant={variant} />
             </div>
           ))}
         </div>

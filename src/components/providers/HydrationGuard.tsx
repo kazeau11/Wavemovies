@@ -1,39 +1,22 @@
 import Script from "next/script";
 
 /**
- * Strips attributes injected by browser extensions (e.g. Bitdefender
- * bis_skin_checked) before React hydrates, preventing false mismatch warnings.
+ * Strips extension-injected attributes and clears legacy Wave localStorage
+ * before React hydrates.
  */
 export function HydrationGuard() {
   return (
     <Script id="hydration-extension-guard" strategy="beforeInteractive">
       {`
 (function () {
-  var LEGACY_KEYS = ["wave-profiles", "wave-watchlist-v2", "wave-continue-watching-v2"];
-  for (var i = 0; i < LEGACY_KEYS.length; i++) {
-    try { localStorage.removeItem(LEGACY_KEYS[i]); } catch (e) {}
-  }
-
-  var STORAGE_KEYS = ["wave-watchlist", "wave-continue-watching"];
-  for (var j = 0; j < STORAGE_KEYS.length; j++) {
-    var storageKey = STORAGE_KEYS[j];
-    try {
-      var raw = localStorage.getItem(storageKey);
-      if (!raw) continue;
-      var parsed = JSON.parse(raw);
-      var state = parsed && parsed.state;
-      if (
-        !state ||
-        typeof state !== "object" ||
-        state.byProfile != null ||
-        (state.items != null && !Array.isArray(state.items))
-      ) {
-        localStorage.removeItem(storageKey);
+  try {
+    for (var i = localStorage.length - 1; i >= 0; i--) {
+      var key = localStorage.key(i);
+      if (key && key.indexOf("wave-") === 0) {
+        localStorage.removeItem(key);
       }
-    } catch (e) {
-      try { localStorage.removeItem(storageKey); } catch (err) {}
     }
-  }
+  } catch (e) {}
 
   var ATTRS = ["bis_skin_checked", "bis_register"];
   function strip(node) {
