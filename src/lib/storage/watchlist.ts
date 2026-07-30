@@ -1,7 +1,5 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { getActiveProfileId, useProfiles } from "@/lib/storage/profiles";
-import { normalizeByProfileState, readByProfile } from "@/lib/storage/normalize";
 
 export interface WatchlistItem {
   movieId: string;
@@ -14,7 +12,7 @@ export interface WatchlistItem {
 }
 
 interface WatchlistState {
-  byProfile: Record<string, WatchlistItem[]>;
+  items: WatchlistItem[];
   isInWatchlist: (movieId: string) => boolean;
   addItem: (item: Omit<WatchlistItem, "addedAt">) => void;
   removeItem: (movieId: string) => void;
@@ -22,50 +20,19 @@ interface WatchlistState {
   clearAll: () => void;
 }
 
-type PersistedWatchlistState = Pick<WatchlistState, "byProfile">;
-
 export const useWatchlist = create<WatchlistState>()(
   persist(
     (set, get) => ({
-      byProfile: {},
-
-      isInWatchlist: (movieId) => {
-        const profileId = getActiveProfileId();
-        if (!profileId) return false;
-        return readByProfile(get().byProfile, profileId).some(
-          (item) => item.movieId === movieId
-        );
-      },
-
+      items: [],
+      isInWatchlist: (movieId) => get().items.some((i) => i.movieId === movieId),
       addItem: (item) => {
-        const profileId = getActiveProfileId();
-        if (!profileId || get().isInWatchlist(item.movieId)) return;
-
-        const byProfile = get().byProfile ?? {};
-        const current = readByProfile(byProfile, profileId);
+        if (get().isInWatchlist(item.movieId)) return;
         set({
-          byProfile: {
-            ...byProfile,
-            [profileId]: [{ ...item, addedAt: new Date().toISOString() }, ...current],
-          },
+          items: [{ ...item, addedAt: new Date().toISOString() }, ...get().items],
         });
       },
-
-      removeItem: (movieId) => {
-        const profileId = getActiveProfileId();
-        if (!profileId) return;
-
-        const byProfile = get().byProfile ?? {};
-        set({
-          byProfile: {
-            ...byProfile,
-            [profileId]: readByProfile(byProfile, profileId).filter(
-              (item) => item.movieId !== movieId
-            ),
-          },
-        });
-      },
-
+      removeItem: (movieId) =>
+        set({ items: get().items.filter((i) => i.movieId !== movieId) }),
       toggleItem: (item) => {
         if (get().isInWatchlist(item.movieId)) {
           get().removeItem(item.movieId);
@@ -73,38 +40,8 @@ export const useWatchlist = create<WatchlistState>()(
           get().addItem(item);
         }
       },
-
-      clearAll: () => {
-        const profileId = getActiveProfileId();
-        if (!profileId) return;
-
-        const byProfile = get().byProfile ?? {};
-        set({
-          byProfile: {
-            ...byProfile,
-            [profileId]: [],
-          },
-        });
-      },
+      clearAll: () => set({ items: [] }),
     }),
-    {
-      name: "wave-watchlist-v2",
-      version: 2,
-      partialize: (state): PersistedWatchlistState => ({
-        byProfile: state.byProfile ?? {},
-      }),
-      merge: (persisted, current) => ({
-        ...current,
-        byProfile: normalizeByProfileState(persisted, getActiveProfileId())
-          .byProfile as Record<string, WatchlistItem[]>,
-      }),
-      migrate: (persisted) =>
-        normalizeByProfileState(persisted, getActiveProfileId()) as PersistedWatchlistState,
-    }
+    { name: "wave-watchlist" }
   )
 );
-
-export function useWatchlistItems() {
-  const profileId = useProfiles((state) => state.activeProfileId);
-  return useWatchlist((state) => readByProfile(state.byProfile, profileId));
-}

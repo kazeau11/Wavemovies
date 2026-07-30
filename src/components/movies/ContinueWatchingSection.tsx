@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { MovieRow } from "@/components/movies/MovieRow";
-import { useContinueWatchingItems } from "@/lib/storage/continue-watching";
+import { useContinueWatching } from "@/lib/storage/continue-watching";
 import { useHasMounted } from "@/lib/hooks/use-has-mounted";
 import type { Movie } from "@/lib/catalogue/types";
 
@@ -12,7 +12,7 @@ interface ContinueWatchingSectionProps {
 
 export function ContinueWatchingSection({ variant = "poster" }: ContinueWatchingSectionProps) {
   const mounted = useHasMounted();
-  const items = useContinueWatchingItems();
+  const { items } = useContinueWatching();
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {

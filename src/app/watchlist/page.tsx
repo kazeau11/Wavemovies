@@ -3,12 +3,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Bookmark, Trash2 } from "lucide-react";
-import { useWatchlist, useWatchlistItems } from "@/lib/storage/watchlist";
+import { useWatchlist } from "@/lib/storage/watchlist";
 import { Button } from "@/components/ui/Button";
 
 export default function WatchlistPage() {
-  const items = useWatchlistItems();
-  const { removeItem, clearAll } = useWatchlist();
+  const { items, removeItem, clearAll } = useWatchlist();
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

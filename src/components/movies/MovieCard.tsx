@@ -4,7 +4,6 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { Play, Plus, Check } from "lucide-react";
 import type { Movie } from "@/lib/catalogue/types";
-import { useProfiles } from "@/lib/storage/profiles";
 import { useWatchlist } from "@/lib/storage/watchlist";
 import { useHasMounted } from "@/lib/hooks/use-has-mounted";
 import { WaveImage } from "@/components/ui/WaveImage";
@@ -26,9 +25,8 @@ export function MovieCard({
   variant = "poster",
 }: MovieCardProps) {
   const mounted = useHasMounted();
-  const profileId = useProfiles((state) => state.activeProfileId);
   const { isInWatchlist, toggleItem } = useWatchlist();
-  const inList = mounted && profileId && isInWatchlist(movie.id);
+  const inList = mounted && isInWatchlist(movie.id);
   const isLandscape = variant === "landscape";
 
   const imageSrc = isLandscape
