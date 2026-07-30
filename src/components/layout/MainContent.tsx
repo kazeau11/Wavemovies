@@ -9,6 +9,7 @@ export function MainContent({ children }: { children: React.ReactNode }) {
     pathname === "/" ||
     pathname.startsWith("/movie/") ||
     pathname.startsWith("/show/") ||
+    pathname.startsWith("/watch/") ||
     pathname === "/tv-shows";
 
   return (

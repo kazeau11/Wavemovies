@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import type { PlaybackSource } from "@/lib/video/player";
 import { cn } from "@/lib/utils";
+import { EMBED_IFRAME_PROPS, PlayerShell } from "@/components/video/PlayerShell";
 
 interface VideoPlayerProps {
   source: PlaybackSource;
@@ -55,20 +56,17 @@ export function VideoPlayer({
 
   if (source.type === "embed") {
     return (
-      <div
-        className={cn(
-          "relative aspect-video w-full overflow-hidden rounded-2xl bg-black",
-          className
-        )}
+      <PlayerShell
+        className={cn("aspect-video w-full", className)}
+        style={{ minHeight: "min(72vh, 820px)" }}
       >
         <iframe
           src={source.url}
           title={title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          allowFullScreen
+          {...EMBED_IFRAME_PROPS}
           className="absolute inset-0 h-full w-full border-0"
         />
-      </div>
+      </PlayerShell>
     );
   }
 

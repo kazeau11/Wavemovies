@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getOneFlexEmbedUrl } from "@/lib/oneflex";
+import { EMBED_IFRAME_PROPS, PlayerShell } from "@/components/video/PlayerShell";
 
 interface OneFlexPlayerProps {
   movieId: string;
@@ -18,11 +19,8 @@ export function OneFlexPlayer({ movieId, title, className }: OneFlexPlayerProps)
   }, [movieId]);
 
   return (
-    <div
-      className={cn(
-        "relative w-full overflow-hidden rounded-xl bg-black shadow-2xl shadow-black/60 ring-1 ring-white/10",
-        className
-      )}
+    <PlayerShell
+      className={cn(className)}
       style={{ aspectRatio: "16 / 9", minHeight: "min(72vh, 820px)" }}
     >
       {embedUrl ? (
@@ -30,15 +28,14 @@ export function OneFlexPlayer({ movieId, title, className }: OneFlexPlayerProps)
           key={movieId}
           src={embedUrl}
           title={title}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          allowFullScreen
+          {...EMBED_IFRAME_PROPS}
           className="absolute inset-0 h-full w-full border-0"
         />
       ) : (
-        <div className="flex h-full items-center justify-center">
+        <div className="flex h-full min-h-[inherit] items-center justify-center">
           <div className="h-10 w-10 animate-spin rounded-full border-2 border-wave-accent border-t-transparent" />
         </div>
       )}
-    </div>
+    </PlayerShell>
   );
 }
