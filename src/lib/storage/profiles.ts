@@ -25,9 +25,16 @@ interface ProfilesState {
   canAddProfile: () => boolean;
 }
 
+function createProfileId(): string {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 11)}`;
+}
+
 function createProfile(name: string, avatarId = DEFAULT_AVATAR_ID): WaveProfile {
   return {
-    id: crypto.randomUUID(),
+    id: createProfileId(),
     name: name.trim() || "Profile",
     avatarId,
     createdAt: new Date().toISOString(),
@@ -77,7 +84,15 @@ export const useProfiles = create<ProfilesState>()(
 
       canAddProfile: () => get().profiles.length < MAX_PROFILES,
     }),
-    { name: "wave-profiles" }
+    {
+      name: "wave-profiles",
+      onRehydrateStorage: () => (state) => {
+        if (!state) return;
+        if (!Array.isArray(state.profiles)) {
+          state.profiles = [];
+        }
+      },
+    }
   )
 );
 

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { getActiveProfileId, useProfiles } from "@/lib/storage/profiles";
+import { normalizeByProfileState, readByProfile } from "@/lib/storage/normalize";
 
 export interface WatchlistItem {
   movieId: string;
@@ -21,8 +22,6 @@ interface WatchlistState {
   clearAll: () => void;
 }
 
-type LegacyWatchlistState = { items?: WatchlistItem[] };
-
 export const useWatchlist = create<WatchlistState>()(
   persist(
     (set, get) => ({
@@ -31,7 +30,7 @@ export const useWatchlist = create<WatchlistState>()(
       isInWatchlist: (movieId) => {
         const profileId = getActiveProfileId();
         if (!profileId) return false;
-        return (get().byProfile[profileId] ?? []).some(
+        return readByProfile(get().byProfile, profileId).some(
           (item) => item.movieId === movieId
         );
       },
@@ -40,14 +39,12 @@ export const useWatchlist = create<WatchlistState>()(
         const profileId = getActiveProfileId();
         if (!profileId || get().isInWatchlist(item.movieId)) return;
 
-        const current = get().byProfile[profileId] ?? [];
+        const byProfile = get().byProfile ?? {};
+        const current = byProfile[profileId] ?? [];
         set({
           byProfile: {
-            ...get().byProfile,
-            [profileId]: [
-              { ...item, addedAt: new Date().toISOString() },
-              ...current,
-            ],
+            ...byProfile,
+            [profileId]: [{ ...item, addedAt: new Date().toISOString() }, ...current],
           },
         });
       },
@@ -56,10 +53,11 @@ export const useWatchlist = create<WatchlistState>()(
         const profileId = getActiveProfileId();
         if (!profileId) return;
 
+        const byProfile = get().byProfile ?? {};
         set({
           byProfile: {
-            ...get().byProfile,
-            [profileId]: (get().byProfile[profileId] ?? []).filter(
+            ...byProfile,
+            [profileId]: (byProfile[profileId] ?? []).filter(
               (item) => item.movieId !== movieId
             ),
           },
@@ -78,9 +76,10 @@ export const useWatchlist = create<WatchlistState>()(
         const profileId = getActiveProfileId();
         if (!profileId) return;
 
+        const byProfile = get().byProfile ?? {};
         set({
           byProfile: {
-            ...get().byProfile,
+            ...byProfile,
             [profileId]: [],
           },
         });
@@ -88,26 +87,22 @@ export const useWatchlist = create<WatchlistState>()(
     }),
     {
       name: "wave-watchlist-v2",
-      migrate: (persisted) => {
-        const state = persisted as LegacyWatchlistState & WatchlistState;
-        if (state.byProfile) return state;
-
-        const legacyItems = state.items ?? [];
-        const profileId = getActiveProfileId();
-        if (!profileId || legacyItems.length === 0) {
-          return { byProfile: {} };
+      version: 2,
+      migrate: (persisted) =>
+        normalizeByProfileState(persisted, getActiveProfileId()) as Pick<
+          WatchlistState,
+          "byProfile"
+        >,
+      onRehydrateStorage: () => (state) => {
+        if (state && !state.byProfile) {
+          state.byProfile = {};
         }
-
-        return { byProfile: { [profileId]: legacyItems } };
       },
-      version: 1,
     }
   )
 );
 
 export function useWatchlistItems() {
   const profileId = useProfiles((state) => state.activeProfileId);
-  return useWatchlist((state) =>
-    profileId ? state.byProfile[profileId] ?? [] : []
-  );
+  return useWatchlist((state) => readByProfile(state.byProfile, profileId));
 }

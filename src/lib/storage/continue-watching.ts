@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { getActiveProfileId, useProfiles } from "@/lib/storage/profiles";
+import { normalizeByProfileState, readByProfile } from "@/lib/storage/normalize";
 
 export interface ContinueWatchingItem {
   movieId: string;
@@ -19,8 +20,6 @@ interface ContinueWatchingState {
   clearAll: () => void;
 }
 
-type LegacyContinueState = { items?: ContinueWatchingItem[] };
-
 export const useContinueWatching = create<ContinueWatchingState>()(
   persist(
     (set, get) => ({
@@ -30,14 +29,15 @@ export const useContinueWatching = create<ContinueWatchingState>()(
         const profileId = getActiveProfileId();
         if (!profileId) return;
 
-        const current = get().byProfile[profileId] ?? [];
+        const byProfile = get().byProfile ?? {};
+        const current = byProfile[profileId] ?? [];
         const existing = current.filter((entry) => entry.movieId !== item.movieId);
         const progress = item.duration > 0 ? item.progress / item.duration : 0;
 
         if (progress >= 0.95) {
           set({
             byProfile: {
-              ...get().byProfile,
+              ...byProfile,
               [profileId]: existing,
             },
           });
@@ -46,7 +46,7 @@ export const useContinueWatching = create<ContinueWatchingState>()(
 
         set({
           byProfile: {
-            ...get().byProfile,
+            ...byProfile,
             [profileId]: [
               { ...item, updatedAt: new Date().toISOString() },
               ...existing,
@@ -59,10 +59,11 @@ export const useContinueWatching = create<ContinueWatchingState>()(
         const profileId = getActiveProfileId();
         if (!profileId) return;
 
+        const byProfile = get().byProfile ?? {};
         set({
           byProfile: {
-            ...get().byProfile,
-            [profileId]: (get().byProfile[profileId] ?? []).filter(
+            ...byProfile,
+            [profileId]: (byProfile[profileId] ?? []).filter(
               (item) => item.movieId !== movieId
             ),
           },
@@ -73,9 +74,10 @@ export const useContinueWatching = create<ContinueWatchingState>()(
         const profileId = getActiveProfileId();
         if (!profileId) return;
 
+        const byProfile = get().byProfile ?? {};
         set({
           byProfile: {
-            ...get().byProfile,
+            ...byProfile,
             [profileId]: [],
           },
         });
@@ -83,26 +85,22 @@ export const useContinueWatching = create<ContinueWatchingState>()(
     }),
     {
       name: "wave-continue-watching-v2",
-      migrate: (persisted) => {
-        const state = persisted as LegacyContinueState & ContinueWatchingState;
-        if (state.byProfile) return state;
-
-        const legacyItems = state.items ?? [];
-        const profileId = getActiveProfileId();
-        if (!profileId || legacyItems.length === 0) {
-          return { byProfile: {} };
+      version: 2,
+      migrate: (persisted) =>
+        normalizeByProfileState(persisted, getActiveProfileId()) as Pick<
+          ContinueWatchingState,
+          "byProfile"
+        >,
+      onRehydrateStorage: () => (state) => {
+        if (state && !state.byProfile) {
+          state.byProfile = {};
         }
-
-        return { byProfile: { [profileId]: legacyItems } };
       },
-      version: 1,
     }
   )
 );
 
 export function useContinueWatchingItems() {
   const profileId = useProfiles((state) => state.activeProfileId);
-  return useContinueWatching((state) =>
-    profileId ? state.byProfile[profileId] ?? [] : []
-  );
+  return useContinueWatching((state) => readByProfile(state.byProfile, profileId));
 }

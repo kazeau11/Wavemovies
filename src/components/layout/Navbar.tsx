@@ -27,7 +27,12 @@ const navLinks = [
 export function Navbar() {
   const pathname = usePathname();
   const mounted = useHasMounted();
-  const activeProfile = useProfiles((state) => state.getActiveProfile());
+  const activeProfileId = useProfiles((state) => state.activeProfileId);
+  const profiles = useProfiles((state) => state.profiles);
+  const activeProfile =
+    activeProfileId != null
+      ? profiles.find((profile) => profile.id === activeProfileId) ?? null
+      : null;
   const [mobileOpen, setMobileOpen] = useState(false);
   const isCinematic =
     pathname === "/" ||
