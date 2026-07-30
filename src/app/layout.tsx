@@ -27,6 +27,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf("wave-")===0)localStorage.removeItem(k);}if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className={`${inter.className} min-h-screen bg-wave-bg text-white antialiased`}
         style={{ backgroundColor: "#0a0a0a", color: "#ffffff", margin: 0 }}

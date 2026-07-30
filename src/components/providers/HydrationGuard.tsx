@@ -1,23 +1,13 @@
 import Script from "next/script";
 
 /**
- * Strips extension-injected attributes and clears legacy Wave localStorage
- * before React hydrates.
+ * Strips attributes injected by browser extensions before React hydrates.
  */
 export function HydrationGuard() {
   return (
     <Script id="hydration-extension-guard" strategy="beforeInteractive">
       {`
 (function () {
-  try {
-    for (var i = localStorage.length - 1; i >= 0; i--) {
-      var key = localStorage.key(i);
-      if (key && key.indexOf("wave-") === 0) {
-        localStorage.removeItem(key);
-      }
-    }
-  } catch (e) {}
-
   var ATTRS = ["bis_skin_checked", "bis_register"];
   function strip(node) {
     if (!node || node.nodeType !== 1) return;
