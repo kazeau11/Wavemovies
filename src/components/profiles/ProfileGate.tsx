@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Plus, Pencil } from "lucide-react";
 import Link from "next/link";
-import { useProfiles, MAX_PROFILES } from "@/lib/storage/profiles";
+import { useProfiles, MAX_PROFILES, useSafeProfiles } from "@/lib/storage/profiles";
 import { DEFAULT_AVATAR_ID } from "@/lib/profiles/avatars";
 import { ProfileAvatar } from "@/components/profiles/ProfileAvatar";
 import { useHasMounted } from "@/lib/hooks/use-has-mounted";
@@ -11,13 +11,9 @@ import { cn } from "@/lib/utils";
 
 export function ProfileGate() {
   const mounted = useHasMounted();
-  const {
-    profiles,
-    activeProfileId,
-    setActiveProfile,
-    addProfile,
-    canAddProfile,
-  } = useProfiles();
+  const profiles = useSafeProfiles();
+  const activeProfileId = useProfiles((state) => state.activeProfileId);
+  const { setActiveProfile, addProfile, canAddProfile } = useProfiles();
   const [creating, setCreating] = useState(false);
   const [name, setName] = useState("");
 

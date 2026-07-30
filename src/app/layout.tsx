@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MainContent } from "@/components/layout/MainContent";
 import { HydrationGuard } from "@/components/providers/HydrationGuard";
+import { StorageSanitizer } from "@/components/providers/StorageSanitizer";
 import { ProfileGate } from "@/components/profiles/ProfileGate";
 
 const inter = Inter({
@@ -33,6 +34,7 @@ export default function RootLayout({
         style={{ backgroundColor: "#0a0a0a", color: "#ffffff", margin: 0 }}
         suppressHydrationWarning
       >
+        <StorageSanitizer />
         <HydrationGuard />
         <ProfileGate />
         <Navbar />

@@ -20,6 +20,8 @@ interface ContinueWatchingState {
   clearAll: () => void;
 }
 
+type PersistedContinueWatchingState = Pick<ContinueWatchingState, "byProfile">;
+
 export const useContinueWatching = create<ContinueWatchingState>()(
   persist(
     (set, get) => ({
@@ -30,7 +32,7 @@ export const useContinueWatching = create<ContinueWatchingState>()(
         if (!profileId) return;
 
         const byProfile = get().byProfile ?? {};
-        const current = byProfile[profileId] ?? [];
+        const current = readByProfile(byProfile, profileId);
         const existing = current.filter((entry) => entry.movieId !== item.movieId);
         const progress = item.duration > 0 ? item.progress / item.duration : 0;
 
@@ -63,7 +65,7 @@ export const useContinueWatching = create<ContinueWatchingState>()(
         set({
           byProfile: {
             ...byProfile,
-            [profileId]: (byProfile[profileId] ?? []).filter(
+            [profileId]: readByProfile(byProfile, profileId).filter(
               (item) => item.movieId !== movieId
             ),
           },
@@ -86,16 +88,16 @@ export const useContinueWatching = create<ContinueWatchingState>()(
     {
       name: "wave-continue-watching-v2",
       version: 2,
+      partialize: (state): PersistedContinueWatchingState => ({
+        byProfile: state.byProfile ?? {},
+      }),
+      merge: (persisted, current) => ({
+        ...current,
+        byProfile: normalizeByProfileState(persisted, getActiveProfileId())
+          .byProfile as Record<string, ContinueWatchingItem[]>,
+      }),
       migrate: (persisted) =>
-        normalizeByProfileState(persisted, getActiveProfileId()) as Pick<
-          ContinueWatchingState,
-          "byProfile"
-        >,
-      onRehydrateStorage: () => (state) => {
-        if (state && !state.byProfile) {
-          state.byProfile = {};
-        }
-      },
+        normalizeByProfileState(persisted, getActiveProfileId()) as PersistedContinueWatchingState,
     }
   )
 );

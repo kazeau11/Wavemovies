@@ -1,6 +1,12 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { DEFAULT_AVATAR_ID } from "@/lib/profiles/avatars";
+import {
+  normalizeByProfileState,
+  readByProfile,
+  sanitizeActiveProfileId,
+  sanitizeProfiles,
+} from "@/lib/storage/normalize";
 
 export const MAX_PROFILES = 4;
 
@@ -25,6 +31,8 @@ interface ProfilesState {
   canAddProfile: () => boolean;
 }
 
+type PersistedProfilesState = Pick<ProfilesState, "profiles" | "activeProfileId">;
+
 function createProfileId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
     return crypto.randomUUID();
@@ -41,6 +49,10 @@ function createProfile(name: string, avatarId = DEFAULT_AVATAR_ID): WaveProfile 
   };
 }
 
+function getSafeProfiles(profiles: WaveProfile[] | undefined): WaveProfile[] {
+  return sanitizeProfiles(profiles);
+}
+
 export const useProfiles = create<ProfilesState>()(
   persist(
     (set, get) => ({
@@ -48,54 +60,72 @@ export const useProfiles = create<ProfilesState>()(
       activeProfileId: null,
 
       addProfile: (name, avatarId) => {
-        if (get().profiles.length >= MAX_PROFILES) return null;
+        const profiles = getSafeProfiles(get().profiles);
+        if (profiles.length >= MAX_PROFILES) return null;
         const profile = createProfile(name, avatarId);
-        set({ profiles: [...get().profiles, profile] });
+        set({ profiles: [...profiles, profile] });
         return profile;
       },
 
       updateProfile: (id, patch) => {
+        const profiles = getSafeProfiles(get().profiles);
         set({
-          profiles: get().profiles.map((profile) =>
+          profiles: profiles.map((profile) =>
             profile.id === id ? { ...profile, ...patch } : profile
           ),
         });
       },
 
       removeProfile: (id) => {
-        const profiles = get().profiles.filter((profile) => profile.id !== id);
+        const profiles = getSafeProfiles(get().profiles).filter(
+          (profile) => profile.id !== id
+        );
         const activeProfileId =
           get().activeProfileId === id
             ? profiles[0]?.id ?? null
-            : get().activeProfileId;
+            : sanitizeActiveProfileId(get().activeProfileId, profiles);
         set({ profiles, activeProfileId });
       },
 
       setActiveProfile: (id) => {
-        if (id && !get().profiles.some((profile) => profile.id === id)) return;
+        const profiles = getSafeProfiles(get().profiles);
+        if (id && !profiles.some((profile) => profile.id === id)) return;
         set({ activeProfileId: id });
       },
 
       getActiveProfile: () => {
-        const { activeProfileId, profiles } = get();
+        const profiles = getSafeProfiles(get().profiles);
+        const activeProfileId = sanitizeActiveProfileId(get().activeProfileId, profiles);
         if (!activeProfileId) return null;
         return profiles.find((profile) => profile.id === activeProfileId) ?? null;
       },
 
-      canAddProfile: () => get().profiles.length < MAX_PROFILES,
+      canAddProfile: () => getSafeProfiles(get().profiles).length < MAX_PROFILES,
     }),
     {
       name: "wave-profiles",
-      onRehydrateStorage: () => (state) => {
-        if (!state) return;
-        if (!Array.isArray(state.profiles)) {
-          state.profiles = [];
-        }
+      partialize: (state): PersistedProfilesState => ({
+        profiles: getSafeProfiles(state.profiles),
+        activeProfileId: state.activeProfileId,
+      }),
+      merge: (persisted, current) => {
+        const saved = persisted as Partial<PersistedProfilesState> | undefined;
+        const profiles = sanitizeProfiles(saved?.profiles);
+        return {
+          ...current,
+          profiles,
+          activeProfileId: sanitizeActiveProfileId(saved?.activeProfileId, profiles),
+        };
       },
     }
   )
 );
 
 export function getActiveProfileId(): string | null {
-  return useProfiles.getState().activeProfileId;
+  const profiles = sanitizeProfiles(useProfiles.getState().profiles);
+  return sanitizeActiveProfileId(useProfiles.getState().activeProfileId, profiles);
+}
+
+export function useSafeProfiles() {
+  return useProfiles((state) => sanitizeProfiles(state.profiles));
 }

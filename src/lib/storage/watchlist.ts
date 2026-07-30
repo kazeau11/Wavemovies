@@ -22,6 +22,8 @@ interface WatchlistState {
   clearAll: () => void;
 }
 
+type PersistedWatchlistState = Pick<WatchlistState, "byProfile">;
+
 export const useWatchlist = create<WatchlistState>()(
   persist(
     (set, get) => ({
@@ -40,7 +42,7 @@ export const useWatchlist = create<WatchlistState>()(
         if (!profileId || get().isInWatchlist(item.movieId)) return;
 
         const byProfile = get().byProfile ?? {};
-        const current = byProfile[profileId] ?? [];
+        const current = readByProfile(byProfile, profileId);
         set({
           byProfile: {
             ...byProfile,
@@ -57,7 +59,7 @@ export const useWatchlist = create<WatchlistState>()(
         set({
           byProfile: {
             ...byProfile,
-            [profileId]: (byProfile[profileId] ?? []).filter(
+            [profileId]: readByProfile(byProfile, profileId).filter(
               (item) => item.movieId !== movieId
             ),
           },
@@ -88,16 +90,16 @@ export const useWatchlist = create<WatchlistState>()(
     {
       name: "wave-watchlist-v2",
       version: 2,
+      partialize: (state): PersistedWatchlistState => ({
+        byProfile: state.byProfile ?? {},
+      }),
+      merge: (persisted, current) => ({
+        ...current,
+        byProfile: normalizeByProfileState(persisted, getActiveProfileId())
+          .byProfile as Record<string, WatchlistItem[]>,
+      }),
       migrate: (persisted) =>
-        normalizeByProfileState(persisted, getActiveProfileId()) as Pick<
-          WatchlistState,
-          "byProfile"
-        >,
-      onRehydrateStorage: () => (state) => {
-        if (state && !state.byProfile) {
-          state.byProfile = {};
-        }
-      },
+        normalizeByProfileState(persisted, getActiveProfileId()) as PersistedWatchlistState,
     }
   )
 );

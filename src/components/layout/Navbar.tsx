@@ -9,7 +9,7 @@ import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { PAGE_X } from "@/lib/layout";
-import { useProfiles } from "@/lib/storage/profiles";
+import { useProfiles, useSafeProfiles } from "@/lib/storage/profiles";
 import { ProfileAvatar } from "@/components/profiles/ProfileAvatar";
 import { useHasMounted } from "@/lib/hooks/use-has-mounted";
 
@@ -28,7 +28,7 @@ export function Navbar() {
   const pathname = usePathname();
   const mounted = useHasMounted();
   const activeProfileId = useProfiles((state) => state.activeProfileId);
-  const profiles = useProfiles((state) => state.profiles);
+  const profiles = useSafeProfiles();
   const activeProfile =
     activeProfileId != null
       ? profiles.find((profile) => profile.id === activeProfileId) ?? null
