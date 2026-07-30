@@ -109,3 +109,14 @@ export interface TVCatalogueProvider {
   getGenres(): Promise<Genre[]>;
   getShowsByIds(ids: string[]): Promise<TVShow[]>;
 }
+
+export type SearchResult =
+  | { mediaType: "movie"; item: Movie }
+  | { mediaType: "tv"; item: TVShow };
+
+export interface UnifiedSearchResult {
+  results: SearchResult[];
+  page: number;
+  totalResults: number;
+  hasMore: boolean;
+}

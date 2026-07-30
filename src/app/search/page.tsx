@@ -1,7 +1,7 @@
 import { getCatalogueProvider, getTVProvider } from "@/lib/catalogue";
-import type { Movie, PaginatedResult, TVShow } from "@/lib/catalogue/types";
-import { MovieGrid } from "@/components/movies/MovieGrid";
-import { ShowGrid } from "@/components/shows/ShowGrid";
+import type { UnifiedSearchResult } from "@/lib/catalogue/types";
+import { mergeSearchResults } from "@/lib/search/merge";
+import { SearchGrid } from "@/components/search/SearchGrid";
 import { SearchBar } from "@/components/ui/SearchBar";
 
 export const revalidate = 60;
@@ -10,41 +10,42 @@ interface SearchPageProps {
   searchParams: Promise<{ q?: string }>;
 }
 
-const emptyMovies: PaginatedResult<Movie> = {
+const empty: UnifiedSearchResult = {
   results: [],
   page: 1,
-  totalPages: 0,
   totalResults: 0,
+  hasMore: false,
 };
 
-const emptyShows: PaginatedResult<TVShow> = {
-  results: [],
-  page: 1,
-  totalPages: 0,
-  totalResults: 0,
-};
+async function unifiedSearch(query: string, page = 1): Promise<UnifiedSearchResult> {
+  const emptyPage = { results: [], page, totalPages: 0, totalResults: 0 };
+
+  const [movies, shows] = await Promise.all([
+    getCatalogueProvider().search(query, page).catch(() => emptyPage),
+    getTVProvider().search(query, page).catch(() => emptyPage),
+  ]);
+
+  return {
+    results: mergeSearchResults(movies.results, shows.results, query),
+    page,
+    totalResults: movies.totalResults + shows.totalResults,
+    hasMore: page < movies.totalPages || page < shows.totalPages,
+  };
+}
 
 export default async function SearchPage({ searchParams }: SearchPageProps) {
   const { q } = await searchParams;
   const query = q?.trim() ?? "";
 
-  let movieResults = emptyMovies;
-  let showResults = emptyShows;
+  let data = empty;
 
   if (query) {
     try {
-      const [movies, shows] = await Promise.all([
-        getCatalogueProvider().search(query, 1).catch(() => emptyMovies),
-        getTVProvider().search(query, 1).catch(() => emptyShows),
-      ]);
-      movieResults = movies;
-      showResults = shows;
+      data = await unifiedSearch(query, 1);
     } catch {
       /* handled below */
     }
   }
-
-  const totalResults = movieResults.totalResults + showResults.totalResults;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -54,37 +55,22 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
       {query ? (
         <>
           <p className="mb-6 text-wave-muted">
-            {totalResults > 0
-              ? `Found ${totalResults} results for "${query}"`
+            {data.totalResults > 0
+              ? `Found ${data.totalResults} results for "${query}"`
               : `No results found for "${query}"`}
           </p>
 
-          {showResults.results.length > 0 && (
-            <section className="mb-12">
-              <h2 className="mb-4 text-xl font-bold text-white">TV Shows</h2>
-              <ShowGrid
-                initialShows={showResults.results}
-                initialPage={showResults.page}
-                totalPages={showResults.totalPages}
-                fetchUrl={`/api/shows?q=${encodeURIComponent(query)}`}
-              />
-            </section>
-          )}
-
-          {movieResults.results.length > 0 && (
-            <section>
-              <h2 className="mb-4 text-xl font-bold text-white">Movies</h2>
-              <MovieGrid
-                initialMovies={movieResults.results}
-                initialPage={movieResults.page}
-                totalPages={movieResults.totalPages}
-                fetchUrl={`/api/movies?q=${encodeURIComponent(query)}`}
-              />
-            </section>
-          )}
+          {data.results.length > 0 ? (
+            <SearchGrid
+              initialResults={data.results}
+              initialPage={data.page}
+              hasMore={data.hasMore}
+              query={query}
+            />
+          ) : null}
         </>
       ) : (
-        <p className="text-wave-muted">Enter a search term to find movies and TV shows.</p>
+        <p className="text-wave-muted">Search movies and TV shows together.</p>
       )}
     </div>
   );
