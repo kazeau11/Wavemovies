@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { User, Clock, Bookmark, Settings } from "lucide-react";
+import { User, Clock, Bookmark, Sparkles } from "lucide-react";
 import { useContinueWatching } from "@/lib/storage/continue-watching";
 import { useWatchlist } from "@/lib/storage/watchlist";
 import { Button } from "@/components/ui/Button";
@@ -35,7 +35,7 @@ export default function ProfilePage() {
           <p className="text-sm text-wave-muted">Watchlist</p>
         </div>
         <div className="rounded-2xl glass p-6 text-center">
-          <Settings className="mx-auto mb-2 h-8 w-8 text-blue-300" />
+          <Sparkles className="mx-auto mb-2 h-8 w-8 text-blue-300" />
           <p className="text-2xl font-bold text-white">Wave</p>
           <p className="text-sm text-wave-muted">Streaming Platform</p>
         </div>
@@ -84,14 +84,9 @@ export default function ProfilePage() {
         </section>
       )}
 
-      <div className="flex flex-wrap gap-3">
-        <Link href="/watchlist">
-          <Button variant="secondary">View Watchlist</Button>
-        </Link>
-        <Link href="/settings">
-          <Button variant="outline">Settings</Button>
-        </Link>
-      </div>
+      <Link href="/watchlist">
+        <Button variant="secondary">View Watchlist</Button>
+      </Link>
     </div>
   );
 }

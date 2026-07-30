@@ -18,9 +18,6 @@ export function Footer() {
           <Link href="/genres" className="transition-colors hover:text-white">
             Genres
           </Link>
-          <Link href="/settings" className="transition-colors hover:text-white">
-            Settings
-          </Link>
         </div>
       </div>
     </footer>
