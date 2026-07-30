@@ -9,7 +9,7 @@ import { EmbedServerPicker } from "./EmbedServerPicker";
 const DEFAULT_SERVER =
   process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
   process.env.ONEFLEX_EMBED_SERVER ??
-  "MAIN_3";
+  "MAIN_2";
 
 interface OneFlexPlayerProps {
   movieId: string;

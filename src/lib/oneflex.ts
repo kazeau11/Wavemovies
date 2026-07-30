@@ -9,21 +9,20 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
     tv: "https://www.viduki.net/1/tv/{id}/{season}/{episode}?color=22d3ee",
   },
   MAIN_2: {
-    label: "Main 2",
+    label: "Main 2 — Videasy (recommended)",
     movie: "https://player.videasy.to/movie/{id}?color=22d3ee&overlay=true",
     tv: "https://player.videasy.to/tv/{id}/{season}/{episode}?color=22d3ee&overlay=true",
   },
   MAIN_3: {
-    label: "Main 3 (recommended)",
-    movie:
-      "https://vidfast.pro/movie/{id}?autoPlay=true&title=false&poster=false&theme=22d3ee&download=false&chromecast=false",
-    tv: "https://vidfast.pro/tv/{id}/{season}/{episode}?autoPlay=true&title=false&poster=false&theme=22d3ee&download=false&chromecast=false",
+    label: "Main 3 — Vidfast",
+    movie: "https://vidfast.pro/movie/{id}?autoPlay=true&title=false&poster=false&theme=22d3ee",
+    tv: "https://vidfast.pro/tv/{id}/{season}/{episode}?autoPlay=true&title=false&poster=false&theme=22d3ee",
   },
   MAIN_4: {
-    label: "Main 4",
+    label: "Main 4 — Vidlink",
     movie:
-      "https://vidlink.pro/movie/{id}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false&download=false",
-    tv: "https://vidlink.pro/tv/{id}/{season}/{episode}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false&download=false",
+      "https://vidlink.pro/movie/{id}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false",
+    tv: "https://vidlink.pro/tv/{id}/{season}/{episode}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false",
   },
   MAIN_5: {
     label: "Main 5",
@@ -32,7 +31,7 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
     tv: "https://vidrock.ru/tv/{id}/{season}/{episode}?theme=22d3ee&autoplay=true&autonext=true&download=false&nextbutton=false",
   },
   MAIN_6: {
-    label: "Main 6",
+    label: "Main 6 — Vidzee",
     movie: "https://player.vidzee.wtf/embed/movie/{id}?color=22d3ee",
     tv: "https://player.vidzee.wtf/embed/tv/{id}/{season}/{episode}?color=22d3ee",
   },
@@ -65,10 +64,10 @@ export function getOneFlexEmbedUrl(movieId: string, serverId?: string): string {
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_3";
+    "MAIN_2";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_3;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
   return provider.movie.replace("{id}", movieId);
 }
 
@@ -95,10 +94,10 @@ export function getOneFlexTVEmbedUrl(
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_3";
+    "MAIN_2";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_3;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
   return provider.tv
     .replace("{id}", showId)
     .replace("{season}", String(season))

@@ -31,7 +31,8 @@ export function EmbedServerPicker({ value, onChange }: EmbedServerPickerProps) {
         ))}
       </select>
       <p className="text-xs text-white/40">
-        Getting redirected? Switch host and press Play again.
+        404 or won&apos;t play? Try <strong className="text-white/55">Main 2</strong> or{" "}
+        <strong className="text-white/55">Main 6</strong>.
       </p>
     </div>
   );
