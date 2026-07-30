@@ -130,7 +130,7 @@ export class OneFlexProvider implements CatalogueProvider {
       runtime: raw.runtime ?? null,
       embedUrl: getOneFlexEmbedUrl(
         String(raw.id),
-        process.env.ONEFLEX_EMBED_SERVER ?? "MAIN_4"
+        process.env.ONEFLEX_EMBED_SERVER ?? "MAIN_3"
       ),
       provider: this.name,
     };

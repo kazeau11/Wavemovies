@@ -14,15 +14,16 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
     tv: "https://player.videasy.to/tv/{id}/{season}/{episode}?color=22d3ee&overlay=true",
   },
   MAIN_3: {
-    label: "Main 3",
-    movie: "https://vidfast.pro/movie/{id}?autoPlay=true&title=false&poster=false&theme=22d3ee",
-    tv: "https://vidfast.pro/tv/{id}/{season}/{episode}?autoPlay=true&title=false&poster=false&theme=22d3ee",
+    label: "Main 3 (recommended)",
+    movie:
+      "https://vidfast.pro/movie/{id}?autoPlay=true&title=false&poster=false&theme=22d3ee&download=false&chromecast=false",
+    tv: "https://vidfast.pro/tv/{id}/{season}/{episode}?autoPlay=true&title=false&poster=false&theme=22d3ee&download=false&chromecast=false",
   },
   MAIN_4: {
     label: "Main 4",
     movie:
-      "https://vidlink.pro/movie/{id}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false",
-    tv: "https://vidlink.pro/tv/{id}/{season}/{episode}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false",
+      "https://vidlink.pro/movie/{id}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false&download=false",
+    tv: "https://vidlink.pro/tv/{id}/{season}/{episode}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false&download=false",
   },
   MAIN_5: {
     label: "Main 5",
@@ -64,10 +65,10 @@ export function getOneFlexEmbedUrl(movieId: string, serverId?: string): string {
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_4";
+    "MAIN_3";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_4;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_3;
   return provider.movie.replace("{id}", movieId);
 }
 
@@ -94,10 +95,10 @@ export function getOneFlexTVEmbedUrl(
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_4";
+    "MAIN_3";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_4;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_3;
   return provider.tv
     .replace("{id}", showId)
     .replace("{season}", String(season))

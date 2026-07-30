@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getOneFlexEmbedUrl } from "@/lib/oneflex";
 import { SecureEmbedFrame } from "./SecureEmbedFrame";
+import { EmbedServerPicker } from "./EmbedServerPicker";
+
+const DEFAULT_SERVER =
+  process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
+  process.env.ONEFLEX_EMBED_SERVER ??
+  "MAIN_3";
 
 interface OneFlexPlayerProps {
   movieId: string;
@@ -12,11 +18,12 @@ interface OneFlexPlayerProps {
 }
 
 export function OneFlexPlayer({ movieId, title, className }: OneFlexPlayerProps) {
+  const [serverId, setServerId] = useState(DEFAULT_SERVER);
   const [embedUrl, setEmbedUrl] = useState("");
 
   useEffect(() => {
-    setEmbedUrl(getOneFlexEmbedUrl(movieId));
-  }, [movieId]);
+    setEmbedUrl(getOneFlexEmbedUrl(movieId, serverId));
+  }, [movieId, serverId]);
 
   if (!embedUrl) {
     return (
@@ -32,5 +39,10 @@ export function OneFlexPlayer({ movieId, title, className }: OneFlexPlayerProps)
     );
   }
 
-  return <SecureEmbedFrame src={embedUrl} title={title} className={className} />;
+  return (
+    <div>
+      <SecureEmbedFrame key={`${movieId}-${serverId}`} src={embedUrl} title={title} className={className} />
+      <EmbedServerPicker value={serverId} onChange={setServerId} />
+    </div>
+  );
 }

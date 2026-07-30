@@ -4,6 +4,12 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getOneFlexTVEmbedUrl } from "@/lib/oneflex";
 import { SecureEmbedFrame } from "./SecureEmbedFrame";
+import { EmbedServerPicker } from "./EmbedServerPicker";
+
+const DEFAULT_SERVER =
+  process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
+  process.env.ONEFLEX_EMBED_SERVER ??
+  "MAIN_3";
 
 interface OneFlexTVPlayerProps {
   showId: string;
@@ -20,11 +26,12 @@ export function OneFlexTVPlayer({
   title,
   className,
 }: OneFlexTVPlayerProps) {
+  const [serverId, setServerId] = useState(DEFAULT_SERVER);
   const [embedUrl, setEmbedUrl] = useState("");
 
   useEffect(() => {
-    setEmbedUrl(getOneFlexTVEmbedUrl(showId, season, episode));
-  }, [showId, season, episode]);
+    setEmbedUrl(getOneFlexTVEmbedUrl(showId, season, episode, serverId));
+  }, [showId, season, episode, serverId]);
 
   if (!embedUrl) {
     return (
@@ -40,5 +47,15 @@ export function OneFlexTVPlayer({
     );
   }
 
-  return <SecureEmbedFrame src={embedUrl} title={title} className={className} />;
+  return (
+    <div>
+      <SecureEmbedFrame
+        key={`${showId}-${season}-${episode}-${serverId}`}
+        src={embedUrl}
+        title={title}
+        className={className}
+      />
+      <EmbedServerPicker value={serverId} onChange={setServerId} />
+    </div>
+  );
 }
