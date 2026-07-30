@@ -10,7 +10,6 @@ import {
   VolumeX,
 } from "lucide-react";
 import type { PlaybackSource } from "@/lib/video/player";
-import { SecureEmbedFrame } from "./SecureEmbedFrame";
 import { cn } from "@/lib/utils";
 
 interface VideoPlayerProps {
@@ -55,29 +54,22 @@ export function VideoPlayer({
   }, []);
 
   if (source.type === "embed") {
-    const isYouTube =
-      source.url.includes("youtube.com") || source.url.includes("youtu.be");
-
-    if (isYouTube) {
-      return (
-        <div
-          className={cn(
-            "relative aspect-video w-full overflow-hidden rounded-2xl bg-black",
-            className
-          )}
-        >
-          <iframe
-            src={source.url}
-            title={title}
-            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-            allowFullScreen
-            className="absolute inset-0 h-full w-full border-0"
-          />
-        </div>
-      );
-    }
-
-    return <SecureEmbedFrame src={source.url} title={title} className={className} />;
+    return (
+      <div
+        className={cn(
+          "relative aspect-video w-full overflow-hidden rounded-2xl bg-black",
+          className
+        )}
+      >
+        <iframe
+          src={source.url}
+          title={title}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          allowFullScreen
+          className="absolute inset-0 h-full w-full border-0"
+        />
+      </div>
+    );
   }
 
   const togglePlay = () => {

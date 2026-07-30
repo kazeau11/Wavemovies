@@ -3,13 +3,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { getOneFlexTVEmbedUrl } from "@/lib/oneflex";
-import { SecureEmbedFrame } from "./SecureEmbedFrame";
-import { EmbedServerPicker } from "./EmbedServerPicker";
-
-const DEFAULT_SERVER =
-  process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-  process.env.ONEFLEX_EMBED_SERVER ??
-  "MAIN_2";
 
 interface OneFlexTVPlayerProps {
   showId: string;
@@ -19,6 +12,7 @@ interface OneFlexTVPlayerProps {
   className?: string;
 }
 
+/** TV uses the same inline iframe player as movies. */
 export function OneFlexTVPlayer({
   showId,
   season,
@@ -26,12 +20,11 @@ export function OneFlexTVPlayer({
   title,
   className,
 }: OneFlexTVPlayerProps) {
-  const [serverId, setServerId] = useState(DEFAULT_SERVER);
   const [embedUrl, setEmbedUrl] = useState("");
 
   useEffect(() => {
-    setEmbedUrl(getOneFlexTVEmbedUrl(showId, season, episode, serverId));
-  }, [showId, season, episode, serverId]);
+    setEmbedUrl(getOneFlexTVEmbedUrl(showId, season, episode));
+  }, [showId, season, episode]);
 
   if (!embedUrl) {
     return (
@@ -48,14 +41,21 @@ export function OneFlexTVPlayer({
   }
 
   return (
-    <div>
-      <SecureEmbedFrame
-        key={`${showId}-${season}-${episode}-${serverId}`}
+    <div
+      className={cn(
+        "relative w-full overflow-hidden rounded-xl bg-black shadow-2xl shadow-black/60 ring-1 ring-white/10",
+        className
+      )}
+      style={{ aspectRatio: "16 / 9", minHeight: "min(72vh, 820px)" }}
+    >
+      <iframe
+        key={`${showId}-${season}-${episode}`}
         src={embedUrl}
         title={title}
-        className={className}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+        allowFullScreen
+        className="absolute inset-0 h-full w-full border-0"
       />
-      <EmbedServerPicker value={serverId} onChange={setServerId} />
     </div>
   );
 }

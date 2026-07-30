@@ -9,17 +9,17 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
     tv: "https://www.viduki.net/1/tv/{id}/{season}/{episode}?color=22d3ee",
   },
   MAIN_2: {
-    label: "Main 2 — Videasy (recommended)",
+    label: "Main 2",
     movie: "https://player.videasy.to/movie/{id}?color=22d3ee&overlay=true",
     tv: "https://player.videasy.to/tv/{id}/{season}/{episode}?color=22d3ee&overlay=true",
   },
   MAIN_3: {
-    label: "Main 3 — Vidfast",
+    label: "Main 3",
     movie: "https://vidfast.pro/movie/{id}?autoPlay=true&title=false&poster=false&theme=22d3ee",
     tv: "https://vidfast.pro/tv/{id}/{season}/{episode}?autoPlay=true&title=false&poster=false&theme=22d3ee",
   },
   MAIN_4: {
-    label: "Main 4 — Vidlink",
+    label: "Main 4",
     movie:
       "https://vidlink.pro/movie/{id}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false",
     tv: "https://vidlink.pro/tv/{id}/{season}/{episode}?primaryColor=22d3ee&title=false&poster=false&autoplay=true&nextbutton=false",
@@ -31,7 +31,7 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
     tv: "https://vidrock.ru/tv/{id}/{season}/{episode}?theme=22d3ee&autoplay=true&autonext=true&download=false&nextbutton=false",
   },
   MAIN_6: {
-    label: "Main 6 — Vidzee",
+    label: "Main 6",
     movie: "https://player.vidzee.wtf/embed/movie/{id}?color=22d3ee",
     tv: "https://player.vidzee.wtf/embed/tv/{id}/{season}/{episode}?color=22d3ee",
   },
