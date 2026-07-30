@@ -1,10 +1,23 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { SearchResult } from "@/lib/catalogue/types";
+import type { Movie, SearchResult, TVShow } from "@/lib/catalogue/types";
 import { MovieCard } from "@/components/movies/MovieCard";
 import { ShowCard } from "@/components/shows/ShowCard";
+import { mergeSearchResults } from "@/lib/search/merge";
 import { Loader2 } from "lucide-react";
+
+function splitResults(results: SearchResult[]) {
+  const movies: Movie[] = [];
+  const shows: TVShow[] = [];
+
+  for (const result of results) {
+    if (result.mediaType === "movie") movies.push(result.item);
+    else shows.push(result.item);
+  }
+
+  return { movies, shows };
+}
 
 interface SearchGridProps {
   initialResults: SearchResult[];
@@ -41,7 +54,11 @@ export function SearchGrid({
       );
       const data = await res.json();
       if (data.results?.length) {
-        setResults((prev) => [...prev, ...data.results]);
+        setResults((prev) => {
+          const combined = [...prev, ...(data.results as SearchResult[])];
+          const { movies, shows } = splitResults(combined);
+          return mergeSearchResults(movies, shows, query);
+        });
         setPage(nextPage);
         setHasMore(Boolean(data.hasMore));
       } else {

@@ -10,15 +10,12 @@ export function getCatalogueProvider(): CatalogueProvider {
   if (cachedProvider) return cachedProvider;
 
   const providerName = process.env.CATALOGUE_PROVIDER ?? "oneflex";
+  const hasTmdbKey = Boolean(process.env.TMDB_API_KEY?.trim());
 
-  switch (providerName.toLowerCase()) {
-    case "oneflex":
-      cachedProvider = new OneFlexProvider();
-      break;
-    case "tmdb":
-    default:
-      cachedProvider = new TmdbProvider();
-      break;
+  if (providerName.toLowerCase() === "tmdb" && hasTmdbKey) {
+    cachedProvider = new TmdbProvider();
+  } else {
+    cachedProvider = new OneFlexProvider();
   }
 
   return cachedProvider;

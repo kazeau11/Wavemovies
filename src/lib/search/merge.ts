@@ -19,6 +19,10 @@ export function mergeSearchResults(
   ];
 
   return results.sort((a, b) => {
+    if (a.mediaType !== b.mediaType) {
+      return a.mediaType === "movie" ? -1 : 1;
+    }
+
     const keyA = sortKey(a.item.title, query);
     const keyB = sortKey(b.item.title, query);
     if (keyA[0] !== keyB[0]) return keyA[0] - keyB[0];
