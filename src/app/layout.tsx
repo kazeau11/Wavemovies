@@ -5,6 +5,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { MainContent } from "@/components/layout/MainContent";
 import { HydrationGuard } from "@/components/providers/HydrationGuard";
+import { NavigationGuard } from "@/components/providers/NavigationGuard";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +31,7 @@ export default function RootLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf("wave-")===0)localStorage.removeItem(k);}if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});}}catch(e){}})();`,
+            __html: `(function(){try{window.open=function(){return null;};for(var i=localStorage.length-1;i>=0;i--){var k=localStorage.key(i);if(k&&k.indexOf("wave-")===0)localStorage.removeItem(k);}if("serviceWorker"in navigator){navigator.serviceWorker.getRegistrations().then(function(r){r.forEach(function(x){x.unregister();});});}}catch(e){}})();`,
           }}
         />
       </head>
@@ -40,6 +41,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <HydrationGuard />
+        <NavigationGuard />
         <Navbar />
         <MainContent>{children}</MainContent>
         <Footer />

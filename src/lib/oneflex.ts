@@ -10,8 +10,8 @@ export const ONEFLEX_EMBED_PROVIDERS: Record<
   },
   MAIN_2: {
     label: "Main 2",
-    movie: "https://player.videasy.to/movie/{id}?color=22d3ee&overlay=true",
-    tv: "https://player.videasy.to/tv/{id}/{season}/{episode}?color=22d3ee&overlay=true",
+    movie: "https://player.videasy.to/movie/{id}?color=22d3ee&overlay=false",
+    tv: "https://player.videasy.to/tv/{id}/{season}/{episode}?color=22d3ee&overlay=false",
   },
   MAIN_3: {
     label: "Main 3",
