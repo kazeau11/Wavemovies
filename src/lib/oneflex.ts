@@ -71,10 +71,10 @@ export function getOneFlexEmbedUrl(movieId: string, serverId?: string): string {
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "CINEJOY";
+    "MAIN_2";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.CINEJOY;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
   return provider.movie.replace("{id}", movieId);
 }
 
@@ -101,10 +101,10 @@ export function getOneFlexTVEmbedUrl(
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "CINEJOY";
+    "MAIN_2";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.CINEJOY;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
   return provider.tv
     .replace("{id}", showId)
     .replace("{season}", String(season))
