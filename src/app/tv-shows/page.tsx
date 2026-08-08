@@ -139,7 +139,7 @@ export default async function TVShowsPage({ searchParams }: TVShowsPageProps) {
             )}
             <Link
               href={`/watch/show/${featured.id}?s=1&e=1`}
-              className="mt-5 inline-flex items-center gap-2.5 rounded-lg bg-wave-accent px-7 py-3 text-sm font-semibold text-wave-bg shadow-lg shadow-cyan-500/15 transition-all hover:bg-cyan-300"
+                className="mt-5 inline-flex items-center gap-2.5 rounded-lg bg-wave-accent px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/30 transition-all hover:bg-wave-accent-2"
             >
               <Play className="h-5 w-5 fill-wave-bg text-wave-bg" />
               Watch Now

@@ -1,4 +1,4 @@
-/** Genre rows shown on the TV Shows hub (matches 1flex.org sections). */
+/** Genre rows shown on the TV Shows hub. */
 export const TV_GENRE_ROWS = [
   { id: "10759", name: "Action & Adventure" },
   { id: "35", name: "Comedy" },

@@ -56,7 +56,7 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
             className={cn(
               "rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors",
               isMovies
-                ? "bg-wave-accent text-wave-bg"
+                ? "bg-wave-accent text-white"
                 : "bg-white/10 text-white hover:bg-white/15"
             )}
           >
@@ -67,7 +67,7 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
             className={cn(
               "rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors",
               !isMovies
-                ? "bg-wave-accent text-wave-bg"
+                ? "bg-wave-accent text-white"
                 : "bg-white/10 text-white hover:bg-white/15"
             )}
           >

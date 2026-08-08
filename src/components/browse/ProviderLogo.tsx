@@ -6,6 +6,7 @@ interface ProviderLogoProps {
   name: string;
   logoUrl?: string;
   size?: "sm" | "md" | "lg" | "tile";
+  fill?: boolean;
   className?: string;
 }
 
@@ -16,11 +17,17 @@ const sizeMap = {
   tile: "h-full w-full",
 };
 
-export function ProviderLogo({ name, logoUrl, size = "md", className }: ProviderLogoProps) {
+export function ProviderLogo({
+  name,
+  logoUrl,
+  size = "md",
+  fill = false,
+  className,
+}: ProviderLogoProps) {
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden",
+        "flex shrink-0 items-center justify-center overflow-hidden bg-[#111]",
         sizeMap[size],
         className
       )}
@@ -30,7 +37,10 @@ export function ProviderLogo({ name, logoUrl, size = "md", className }: Provider
         <img
           src={logoUrl}
           alt={name}
-          className="h-full w-full object-contain"
+          className={cn(
+            "h-full w-full",
+            fill ? "object-cover" : "object-contain p-0.5"
+          )}
           loading="lazy"
           decoding="async"
         />

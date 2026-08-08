@@ -6,7 +6,8 @@ import type {
 } from "../types";
 import { getTmdbImageUrl } from "@/lib/images";
 import { getOneFlexEmbedUrl } from "@/lib/oneflex";
-import { fetchCatalogueApi, getCatalogueApiOrigin } from "../api-origin";
+import { fetchCinejoyCatalogue } from "../cinejoy-api";
+import { getCinejoyCatalogueBaseUrl } from "../cinejoy-config";
 
 interface OneFlexMovie {
   id: number;
@@ -36,18 +37,16 @@ interface OneFlexPaginated {
 }
 
 /**
- * 1Flex catalogue provider — metadata from db.1flex.org, playback via your 1flex.org site.
+ * Cinejoy catalogue provider — same TMDB movie library as cinejoy.to.
  */
 export class OneFlexProvider implements CatalogueProvider {
-  readonly name = "oneflex";
+  readonly name = "cinejoy";
 
   private baseUrl: string;
-  private origin: string;
   private genresCache: Map<number, string> | null = null;
 
   constructor() {
-    this.baseUrl = process.env.ONEFLEX_API_URL ?? "https://db.1flex.org";
-    this.origin = getCatalogueApiOrigin();
+    this.baseUrl = getCinejoyCatalogueBaseUrl();
   }
 
   private async fetchApi<T>(path: string, params?: Record<string, string>): Promise<T> {
@@ -58,7 +57,7 @@ export class OneFlexProvider implements CatalogueProvider {
       });
     }
 
-    return fetchCatalogueApi<T>(url.toString(), this.origin);
+    return fetchCinejoyCatalogue<T>(url.toString());
   }
 
   private imageUrl(path: string | null | undefined, size: "poster" | "backdrop" | "hero"): string {

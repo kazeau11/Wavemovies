@@ -5,8 +5,6 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Play, Info } from "lucide-react";
 import type { Movie } from "@/lib/catalogue/types";
-import type { WatchProvider } from "@/lib/catalogue/watch-providers";
-import { ProviderBrowse } from "@/components/browse/ProviderBrowse";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { PAGE_PL } from "@/lib/layout";
 import { cn } from "@/lib/utils";
@@ -15,10 +13,9 @@ const SLIDE_MS = 6000;
 
 interface HeroSectionProps {
   movies: Movie[];
-  providers?: WatchProvider[];
 }
 
-export function HeroSection({ movies, providers }: HeroSectionProps) {
+export function HeroSection({ movies }: HeroSectionProps) {
   const [index, setIndex] = useState(0);
 
   const go = useCallback(
@@ -45,7 +42,7 @@ export function HeroSection({ movies, providers }: HeroSectionProps) {
   const backdrop = movie.backdropUrl || movie.posterUrl || "/placeholder-poster.svg";
 
   return (
-    <section className="relative h-[92vh] min-h-[620px] w-full overflow-hidden bg-wave-bg">
+    <section className="relative h-[85vh] min-h-[540px] w-full overflow-hidden bg-wave-bg">
       <AnimatePresence mode="wait">
         <motion.div
           key={movie.id}
@@ -72,11 +69,10 @@ export function HeroSection({ movies, providers }: HeroSectionProps) {
 
       <div
         className={cn(
-          "relative z-10 flex h-full w-full flex-col justify-end pb-6 pt-28",
+          "relative z-10 flex h-full w-full items-center pt-[72px]",
           PAGE_PL
         )}
       >
-        <div className="flex w-full items-end justify-start pb-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={movie.id}
@@ -84,33 +80,33 @@ export function HeroSection({ movies, providers }: HeroSectionProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 8 }}
             transition={{ duration: 0.4 }}
-            className="flex max-w-xl flex-col items-start text-left sm:max-w-2xl"
+            className="flex max-w-xl flex-col items-start text-left sm:max-w-2xl lg:max-w-3xl"
           >
-            <span className="mb-4 inline-block rounded-md bg-black/50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.12em] text-white backdrop-blur-sm">
+            <span className="mb-3 inline-block text-[11px] font-bold uppercase tracking-[0.14em] text-white/80">
               #{index + 1} Today
             </span>
 
-            <h1 className="text-4xl font-bold leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-[3.5rem]">
+            <h1 className="text-4xl font-bold leading-[1.05] tracking-tight text-white sm:text-5xl lg:text-[3.25rem]">
               {movie.title}
             </h1>
 
-            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-white/75">
+            <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-white/75">
               {movie.releaseYear > 0 && <span>{movie.releaseYear}</span>}
               <span className="rounded border border-white/30 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/90">
                 HD
               </span>
             </div>
 
-            <p className="mt-4 line-clamp-2 max-w-lg text-[15px] leading-relaxed text-white/60 sm:text-base">
+            <p className="mt-4 line-clamp-3 max-w-lg text-[15px] leading-relaxed text-white/65 sm:text-base">
               {movie.overview || "No description available."}
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <Link
                 href={`/watch/${movie.id}`}
-                className="inline-flex items-center gap-2.5 rounded-lg bg-wave-accent px-7 py-3 text-sm font-semibold text-wave-bg shadow-lg shadow-cyan-500/15 transition-all hover:bg-cyan-300"
+                className="inline-flex items-center gap-2.5 rounded-lg bg-wave-accent px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-blue-900/30 transition-all hover:bg-wave-accent-2"
               >
-                <Play className="h-4 w-4 fill-wave-bg text-wave-bg" />
+                <Play className="h-4 w-4 fill-white text-white" />
                 Play
               </Link>
               <Link
@@ -123,15 +119,10 @@ export function HeroSection({ movies, providers }: HeroSectionProps) {
             </div>
           </motion.div>
         </AnimatePresence>
-        </div>
-
-        {providers && providers.length > 0 && (
-          <ProviderBrowse providers={providers} compact embedded className="relative z-10 w-full" />
-        )}
       </div>
 
       {movies.length > 1 && (
-        <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
+        <div className="absolute bottom-6 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
           {movies.map((m, i) => (
             <button
               key={m.id}

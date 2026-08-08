@@ -22,8 +22,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "image.tmdb.org" },
       { protocol: "https", hostname: "wsrv.nl" },
-      { protocol: "https", hostname: "db.1flex.org" },
-      { protocol: "https", hostname: "**.1flex.org" },
+      { protocol: "https", hostname: "cinejoy.to" },
       { protocol: "https", hostname: "commondatastorage.googleapis.com" },
     ],
   },

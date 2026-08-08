@@ -7,9 +7,9 @@
   --color-wave-surface: #111111;
   --color-wave-card: #1a1a1a;
   --color-wave-border: #2a2a2a;
-  --color-wave-accent: #22d3ee;
-  --color-wave-accent-2: #38bdf8;
-  --color-wave-accent-3: #0ea5e9;
+  --color-wave-accent: #1d4ed8;
+  --color-wave-accent-2: #2563eb;
+  --color-wave-accent-3: #1e40af;
   --color-wave-muted: #9ca3af;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
@@ -58,7 +58,7 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #22d3ee;
+    background: #2563eb;
   }
 }
 
@@ -79,7 +79,7 @@
   }
 
   .text-gradient {
-    background: linear-gradient(to right, #22d3ee, #38bdf8);
+    background: linear-gradient(to right, #2563eb, #1d4ed8);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;

@@ -60,26 +60,25 @@ export default async function HomePage() {
   return (
     <div className="bg-wave-bg pb-16">
       {heroMovies.length > 0 ? (
-        <HeroSection movies={heroMovies} providers={watchProviders} />
+        <HeroSection movies={heroMovies} />
       ) : (
-        <section className="relative bg-wave-surface">
-          <div className={cn("relative flex h-[88vh] min-h-[560px] items-end pb-8", PAGE_PL)}>
-            <div className="absolute inset-0 hero-gradient" />
-            <div className="relative max-w-xl text-left">
-              <span className="inline-block rounded bg-wave-accent/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-wave-bg">
-                Wave
-              </span>
-              <h1 className="mt-4 text-4xl font-bold text-white sm:text-5xl">Stream beautifully</h1>
-              <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/60">
-                Discover movies and shows — browse by streaming provider.
-              </p>
-            </div>
+        <section className={cn("relative flex h-[85vh] min-h-[540px] items-center bg-wave-surface", PAGE_PL)}>
+          <div className="absolute inset-0 hero-gradient" />
+          <div className="relative max-w-xl text-left">
+            <span className="inline-block rounded bg-wave-accent px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-white">
+              Wave
+            </span>
+            <h1 className="mt-4 text-4xl font-bold text-white sm:text-5xl">Stream beautifully</h1>
+            <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/60">
+              Discover movies and shows — browse by streaming provider.
+            </p>
           </div>
-          <ProviderBrowse providers={watchProviders} />
         </section>
       )}
 
-      <div className="space-y-8 pt-4 sm:space-y-10 sm:pt-6">
+      <div className="space-y-8 pt-6 sm:space-y-10">
+        <ProviderBrowse providers={watchProviders} />
+
         {providerMovies.length > 0 && (
           <MovieRow
             title={`Movies on ${featuredProvider.name}`}

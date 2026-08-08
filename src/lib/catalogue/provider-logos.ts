@@ -1,5 +1,6 @@
 import { FEATURED_WATCH_PROVIDERS, WATCH_REGION } from "@/lib/catalogue/watch-providers";
-import { fetchCatalogueApi, getCatalogueApiOrigin } from "@/lib/catalogue/api-origin";
+import { fetchCinejoyCatalogue } from "@/lib/catalogue/cinejoy-api";
+import { getCinejoyCatalogueBaseUrl } from "@/lib/catalogue/cinejoy-config";
 
 interface TmdbProviderLogo {
   provider_id: number;
@@ -8,14 +9,11 @@ interface TmdbProviderLogo {
 }
 
 async function fetchProviderLogos(): Promise<Map<number, string>> {
-  const baseUrl = process.env.ONEFLEX_API_URL ?? "https://db.1flex.org";
+  const baseUrl = getCinejoyCatalogueBaseUrl();
   const url = new URL("/watch/providers/movie", baseUrl);
   url.searchParams.set("watch_region", WATCH_REGION);
 
-  const data = await fetchCatalogueApi<{ results?: TmdbProviderLogo[] }>(
-    url.toString(),
-    getCatalogueApiOrigin()
-  );
+  const data = await fetchCinejoyCatalogue<{ results?: TmdbProviderLogo[] }>(url.toString());
 
   const logos = new Map<number, string>();
 
