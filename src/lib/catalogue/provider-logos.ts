@@ -1,6 +1,6 @@
 import { FEATURED_WATCH_PROVIDERS, WATCH_REGION } from "@/lib/catalogue/watch-providers";
-import { fetchCinejoyCatalogue } from "@/lib/catalogue/cinejoy-api";
-import { getCinejoyCatalogueBaseUrl } from "@/lib/catalogue/cinejoy-config";
+import { fetchCatalogueApi } from "@/lib/catalogue/cinejoy-api";
+import { getCatalogueBaseUrl } from "@/lib/catalogue/cinejoy-config";
 
 interface TmdbProviderLogo {
   provider_id: number;
@@ -9,11 +9,11 @@ interface TmdbProviderLogo {
 }
 
 async function fetchProviderLogos(): Promise<Map<number, string>> {
-  const baseUrl = getCinejoyCatalogueBaseUrl();
+  const baseUrl = getCatalogueBaseUrl();
   const url = new URL("/watch/providers/movie", baseUrl);
   url.searchParams.set("watch_region", WATCH_REGION);
 
-  const data = await fetchCinejoyCatalogue<{ results?: TmdbProviderLogo[] }>(url.toString());
+  const data = await fetchCatalogueApi<{ results?: TmdbProviderLogo[] }>(url.toString());
 
   const logos = new Map<number, string>();
 

@@ -6,8 +6,8 @@ import type {
   TVShow,
 } from "../types";
 import { getTmdbImageUrl } from "@/lib/images";
-import { fetchCinejoyCatalogue } from "../cinejoy-api";
-import { getCinejoyCatalogueBaseUrl } from "../cinejoy-config";
+import { fetchCatalogueApi } from "../cinejoy-api";
+import { getCatalogueBaseUrl } from "../cinejoy-config";
 
 interface OneFlexTV {
   id: number;
@@ -61,7 +61,7 @@ export class OneFlexTVProvider implements TVCatalogueProvider {
   private genresCache: Map<number, string> | null = null;
 
   constructor() {
-    this.baseUrl = getCinejoyCatalogueBaseUrl();
+    this.baseUrl = getCatalogueBaseUrl();
   }
 
   private async fetchApi<T>(path: string, params?: Record<string, string>): Promise<T> {
@@ -72,7 +72,7 @@ export class OneFlexTVProvider implements TVCatalogueProvider {
       });
     }
 
-    return fetchCinejoyCatalogue<T>(url.toString());
+    return fetchCatalogueApi<T>(url.toString());
   }
 
   private imageUrl(path: string | null | undefined, size: "poster" | "backdrop" | "hero"): string {
