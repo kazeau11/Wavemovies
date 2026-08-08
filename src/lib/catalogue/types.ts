@@ -41,6 +41,7 @@ export interface CatalogueProvider {
   getRecentlyAdded(page?: number): Promise<PaginatedResult<Movie>>;
   getTopRated(page?: number): Promise<PaginatedResult<Movie>>;
   getByGenre(genreId: string, page?: number): Promise<PaginatedResult<Movie>>;
+  getByWatchProvider(watchProviderId: string, page?: number): Promise<PaginatedResult<Movie>>;
   search(query: string, page?: number): Promise<PaginatedResult<Movie>>;
   getMovie(id: string): Promise<Movie | null>;
   getRelated(id: string, page?: number): Promise<PaginatedResult<Movie>>;
@@ -102,6 +103,7 @@ export interface TVCatalogueProvider {
   getAiringToday(page?: number): Promise<PaginatedResult<TVShow>>;
   getOnTheAir(page?: number): Promise<PaginatedResult<TVShow>>;
   getByGenre(genreId: string, page?: number): Promise<PaginatedResult<TVShow>>;
+  getByWatchProvider(watchProviderId: string, page?: number): Promise<PaginatedResult<TVShow>>;
   search(query: string, page?: number): Promise<PaginatedResult<TVShow>>;
   getShow(id: string): Promise<TVShow | null>;
   getRelated(id: string, page?: number): Promise<PaginatedResult<TVShow>>;

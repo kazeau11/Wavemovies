@@ -61,7 +61,7 @@ export class OneFlexTVProvider implements TVCatalogueProvider {
 
   constructor() {
     this.baseUrl = process.env.ONEFLEX_API_URL ?? "https://db.1flex.org";
-    this.origin = process.env.ONEFLEX_ORIGIN ?? "https://www.1flex.org";
+    this.origin = process.env.ONEFLEX_ORIGIN ?? "https://cinejoy.to";
   }
 
   private async fetchApi<T>(path: string, params?: Record<string, string>): Promise<T> {
@@ -199,6 +199,16 @@ export class OneFlexTVProvider implements TVCatalogueProvider {
   async getByGenre(genreId: string, page = 1): Promise<PaginatedResult<TVShow>> {
     const data = await this.fetchApi<OneFlexPaginated>("/discover/tv", {
       with_genres: genreId,
+      page: String(page),
+      sort_by: "popularity.desc",
+    });
+    return this.normalizePaginated(data, page);
+  }
+
+  async getByWatchProvider(watchProviderId: string, page = 1): Promise<PaginatedResult<TVShow>> {
+    const data = await this.fetchApi<OneFlexPaginated>("/discover/tv", {
+      with_watch_providers: watchProviderId,
+      watch_region: process.env.WATCH_REGION ?? "US",
       page: String(page),
       sort_by: "popularity.desc",
     });

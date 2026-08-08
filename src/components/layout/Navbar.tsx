@@ -13,7 +13,7 @@ import { PAGE_X } from "@/lib/layout";
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/movies", label: "Movies" },
-  { href: "/tv-shows", label: "TV Shows" },
+  { href: "/tv-shows", label: "Shows" },
   { href: "/genres", label: "Genres" },
   { href: "/movies?section=trending", label: "Trending" },
   { href: "/movies?section=top-rated", label: "Top Rated" },

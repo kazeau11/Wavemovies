@@ -1,9 +1,12 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getTVProvider } from "@/lib/catalogue";
+import { getFeaturedWatchProviders } from "@/lib/catalogue/provider-logos";
 import { TV_GENRE_ROWS } from "@/lib/catalogue/tv-genres";
 import { TV_CLASSIC_IDS } from "@/lib/catalogue/tv-classics";
 import { ShowRow } from "@/components/shows/ShowRow";
 import { ShowGrid } from "@/components/shows/ShowGrid";
+import { ProviderFilter } from "@/components/browse/ProviderFilter";
 import { SearchBar } from "@/components/ui/SearchBar";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { Play } from "lucide-react";
@@ -12,7 +15,7 @@ import { cn } from "@/lib/utils";
 export const revalidate = 300;
 
 interface TVShowsPageProps {
-  searchParams: Promise<{ section?: string; genreId?: string }>;
+  searchParams: Promise<{ section?: string; genreId?: string; watchProviderId?: string }>;
 }
 
 const empty = { results: [], page: 1, totalPages: 0, totalResults: 0 };
@@ -28,13 +31,20 @@ async function safeFetch<T>(fn: () => Promise<T>, fallback: T): Promise<T> {
 export default async function TVShowsPage({ searchParams }: TVShowsPageProps) {
   const params = await searchParams;
   const provider = getTVProvider();
+  const watchProviders = await getFeaturedWatchProviders().catch(() => []);
 
-  if (params.section || params.genreId) {
+  if (params.section || params.genreId || params.watchProviderId) {
     let data;
-    let title = "All TV Shows";
+    let title = "All Shows";
     let fetchUrl = `/api/shows?section=${params.section ?? "popular"}`;
 
-    if (params.genreId) {
+    if (params.watchProviderId) {
+      data = await safeFetch(() => provider.getByWatchProvider(params.watchProviderId!, 1), empty);
+      const providerName =
+        watchProviders.find((entry) => entry.id === params.watchProviderId)?.name ?? "Provider";
+      title = `Series on ${providerName}`;
+      fetchUrl = `/api/shows?watchProviderId=${params.watchProviderId}`;
+    } else if (params.genreId) {
       const genre = TV_GENRE_ROWS.find((g) => g.id === params.genreId);
       data = await safeFetch(() => provider.getByGenre(params.genreId!, 1), empty);
       title = genre ? `${genre.name} Series` : "TV Shows by Genre";
@@ -65,7 +75,15 @@ export default async function TVShowsPage({ searchParams }: TVShowsPageProps) {
 
     return (
       <div className="mx-auto max-w-[1400px] px-5 py-8 sm:px-8 lg:px-10">
-        <h1 className="mb-8 text-3xl font-bold text-white">{title}</h1>
+        <div className="mb-2">
+          <h1 className="text-3xl font-bold text-white">{title}</h1>
+          <p className="mt-1 text-sm text-wave-muted">Discover new series to watch</p>
+        </div>
+
+        <Suspense fallback={null}>
+          <ProviderFilter providers={watchProviders} basePath="/tv-shows" />
+        </Suspense>
+
         <ShowGrid
           initialShows={data.results}
           initialPage={data.page}

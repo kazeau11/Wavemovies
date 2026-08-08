@@ -167,6 +167,16 @@ export class TmdbProvider implements CatalogueProvider {
     return this.normalizePaginated(data);
   }
 
+  async getByWatchProvider(watchProviderId: string, page = 1): Promise<PaginatedResult<Movie>> {
+    const data = await this.fetchApi<TmdbPaginated<TmdbMovie>>("/discover/movie", {
+      with_watch_providers: watchProviderId,
+      watch_region: process.env.WATCH_REGION ?? "US",
+      page: String(page),
+      sort_by: "popularity.desc",
+    });
+    return this.normalizePaginated(data);
+  }
+
   async search(query: string, page = 1): Promise<PaginatedResult<Movie>> {
     const data = await this.fetchApi<TmdbPaginated<TmdbMovie>>("/search/movie", {
       query,

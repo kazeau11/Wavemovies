@@ -22,14 +22,14 @@ export function WaveLogo({ size = "md", showText = true, className, href = "/" }
     <div className={cn("flex items-center gap-2", className)} suppressHydrationWarning>
       <Image
         src="/wave-logo.png"
-        alt="Wave"
+        alt="Cinejoy"
         width={icon}
         height={icon}
         className="object-contain"
         priority
       />
       {showText && (
-        <span className={cn("font-bold tracking-tight text-wave-accent", text)}>Wave</span>
+        <span className={cn("font-bold tracking-tight text-wave-accent", text)}>Cinejoy</span>
       )}
     </div>
   );

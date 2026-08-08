@@ -7,12 +7,18 @@ export async function GET(request: Request) {
     const section = searchParams.get("section") ?? "popular";
     const page = Number(searchParams.get("page") ?? "1");
     const genreId = searchParams.get("genreId") ?? undefined;
+    const watchProviderId = searchParams.get("watchProviderId") ?? undefined;
     const query = searchParams.get("q") ?? undefined;
 
     const provider = getTVProvider();
 
     if (query) {
       const data = await provider.search(query, page);
+      return NextResponse.json(data);
+    }
+
+    if (watchProviderId) {
+      const data = await provider.getByWatchProvider(watchProviderId, page);
       return NextResponse.json(data);
     }
 
