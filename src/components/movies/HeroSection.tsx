@@ -5,6 +5,8 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Play, Info } from "lucide-react";
 import type { Movie } from "@/lib/catalogue/types";
+import type { WatchProvider } from "@/lib/catalogue/watch-providers";
+import { ProviderBrowse } from "@/components/browse/ProviderBrowse";
 import { WaveImage } from "@/components/ui/WaveImage";
 import { PAGE_PL } from "@/lib/layout";
 import { cn } from "@/lib/utils";
@@ -13,9 +15,10 @@ const SLIDE_MS = 6000;
 
 interface HeroSectionProps {
   movies: Movie[];
+  providers?: WatchProvider[];
 }
 
-export function HeroSection({ movies }: HeroSectionProps) {
+export function HeroSection({ movies, providers }: HeroSectionProps) {
   const [index, setIndex] = useState(0);
 
   const go = useCallback(
@@ -69,10 +72,11 @@ export function HeroSection({ movies }: HeroSectionProps) {
 
       <div
         className={cn(
-          "relative z-10 flex h-full w-full items-end justify-start pb-24 pt-28",
+          "relative z-10 flex h-full w-full flex-col justify-end pb-6 pt-28",
           PAGE_PL
         )}
       >
+        <div className="flex w-full items-end justify-start pb-4">
         <AnimatePresence mode="wait">
           <motion.div
             key={movie.id}
@@ -119,10 +123,15 @@ export function HeroSection({ movies }: HeroSectionProps) {
             </div>
           </motion.div>
         </AnimatePresence>
+        </div>
+
+        {providers && providers.length > 0 && (
+          <ProviderBrowse providers={providers} compact embedded className="relative z-10 w-full" />
+        )}
       </div>
 
       {movies.length > 1 && (
-        <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
+        <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-1.5">
           {movies.map((m, i) => (
             <button
               key={m.id}

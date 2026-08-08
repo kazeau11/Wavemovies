@@ -1,8 +1,15 @@
-/** 1Flex stream embed templates (same providers as 1flex.org). */
+const CINEJOY_ORIGIN = process.env.CINEJOY_ORIGIN ?? "https://cinejoy.to";
+
+/** Stream embed templates — Cinejoy uses the same TMDB catalogue + Videasy-style hosts. */
 export const ONEFLEX_EMBED_PROVIDERS: Record<
   string,
   { label: string; movie: string; tv: string }
 > = {
+  CINEJOY: {
+    label: "Cinejoy",
+    movie: `${CINEJOY_ORIGIN}/embed/movie/{id}`,
+    tv: `${CINEJOY_ORIGIN}/embed/tv/{id}/{season}/{episode}`,
+  },
   MAIN_1: {
     label: "Main 1",
     movie: "https://www.viduki.net/1/movie/{id}?color=22d3ee",
@@ -64,10 +71,10 @@ export function getOneFlexEmbedUrl(movieId: string, serverId?: string): string {
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_2";
+    "CINEJOY";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.CINEJOY;
   return provider.movie.replace("{id}", movieId);
 }
 
@@ -94,10 +101,10 @@ export function getOneFlexTVEmbedUrl(
     serverId ??
     process.env.ONEFLEX_EMBED_SERVER ??
     process.env.NEXT_PUBLIC_ONEFLEX_EMBED_SERVER ??
-    "MAIN_2";
+    "CINEJOY";
 
   const provider =
-    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.MAIN_2;
+    ONEFLEX_EMBED_PROVIDERS[resolvedServer] ?? ONEFLEX_EMBED_PROVIDERS.CINEJOY;
   return provider.tv
     .replace("{id}", showId)
     .replace("{season}", String(season))

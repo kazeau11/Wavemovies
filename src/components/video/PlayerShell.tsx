@@ -2,17 +2,26 @@
 
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { Maximize, Minimize } from "lucide-react";
+import { useWatchGuard } from "@/lib/hooks/use-watch-guard";
 import { cn } from "@/lib/utils";
 
 interface PlayerShellProps {
   children: ReactNode;
   className?: string;
   style?: CSSProperties;
+  guardNavigation?: boolean;
 }
 
-export function PlayerShell({ children, className, style }: PlayerShellProps) {
+export function PlayerShell({
+  children,
+  className,
+  style,
+  guardNavigation = true,
+}: PlayerShellProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+
+  useWatchGuard(guardNavigation);
 
   useEffect(() => {
     const onChange = () => {
@@ -69,4 +78,5 @@ export const EMBED_IFRAME_PROPS = {
   allow:
     "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen",
   allowFullScreen: true,
+  referrerPolicy: "no-referrer-when-downgrade" as const,
 } as const;
