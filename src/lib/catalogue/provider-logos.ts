@@ -1,4 +1,5 @@
 import { FEATURED_WATCH_PROVIDERS, WATCH_REGION } from "@/lib/catalogue/watch-providers";
+import { fetchCatalogueApi, getCatalogueApiOrigin } from "@/lib/catalogue/api-origin";
 
 interface TmdbProviderLogo {
   provider_id: number;
@@ -8,30 +9,19 @@ interface TmdbProviderLogo {
 
 async function fetchProviderLogos(): Promise<Map<number, string>> {
   const baseUrl = process.env.ONEFLEX_API_URL ?? "https://db.1flex.org";
-  const origin = process.env.ONEFLEX_ORIGIN ?? "https://cinejoy.to";
-
   const url = new URL("/watch/providers/movie", baseUrl);
   url.searchParams.set("watch_region", WATCH_REGION);
 
-  const response = await fetch(url.toString(), {
-    headers: {
-      Accept: "application/json",
-      Origin: origin,
-      Referer: `${origin}/`,
-    },
-    next: { revalidate: 86400 },
-  });
+  const data = await fetchCatalogueApi<{ results?: TmdbProviderLogo[] }>(
+    url.toString(),
+    getCatalogueApiOrigin()
+  );
 
-  if (!response.ok) {
-    return new Map();
-  }
-
-  const data = (await response.json()) as { results?: TmdbProviderLogo[] };
   const logos = new Map<number, string>();
 
   for (const entry of data.results ?? []) {
     if (entry.logo_path) {
-      logos.set(entry.provider_id, `https://image.tmdb.org/t/p/w92${entry.logo_path}`);
+      logos.set(entry.provider_id, `https://image.tmdb.org/t/p/w154${entry.logo_path}`);
     }
   }
 

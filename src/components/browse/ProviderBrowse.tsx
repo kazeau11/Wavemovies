@@ -7,24 +7,37 @@ import { cn } from "@/lib/utils";
 interface ProviderBrowseProps {
   providers: WatchProvider[];
   className?: string;
+  overlay?: boolean;
 }
 
-export function ProviderBrowse({ providers, className }: ProviderBrowseProps) {
+export function ProviderBrowse({ providers, className, overlay = false }: ProviderBrowseProps) {
   if (providers.length === 0) return null;
 
   return (
-    <section className={cn("py-6", className)}>
+    <section
+      className={cn(
+        overlay ? "relative z-20 -mt-24 pb-2 sm:-mt-28" : "py-6",
+        className
+      )}
+    >
       <div className={PAGE_X}>
-        <h2 className="mb-5 text-xl font-bold text-white sm:text-2xl">Browse by Provider</h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8">
+        <h2 className="mb-4 text-lg font-bold text-white sm:text-xl">Browse by Provider</h2>
+        <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-2 sm:gap-5">
           {providers.map((provider) => (
             <Link
               key={provider.id}
               href={`/provider/${provider.slug}`}
-              className="group flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-all hover:border-wave-accent/40 hover:bg-white/[0.08]"
+              className="group flex w-[72px] shrink-0 flex-col items-center gap-2 sm:w-[80px]"
             >
-              <ProviderLogo name={provider.name} logoUrl={provider.logoUrl} size="lg" />
-              <span className="line-clamp-2 text-center text-xs font-medium text-white/80 group-hover:text-white">
+              <div className="flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl bg-black/60 p-2 ring-1 ring-white/10 transition-all group-hover:ring-wave-accent/50 sm:rounded-[18px] sm:p-2.5">
+                <ProviderLogo
+                  name={provider.name}
+                  logoUrl={provider.logoUrl}
+                  size="tile"
+                  className="bg-transparent"
+                />
+              </div>
+              <span className="line-clamp-2 w-full text-center text-[11px] leading-tight text-white/55 group-hover:text-white/90 sm:text-xs">
                 {provider.name}
               </span>
             </Link>

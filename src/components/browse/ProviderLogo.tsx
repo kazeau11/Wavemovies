@@ -1,37 +1,38 @@
-import Image from "next/image";
+"use client";
+
 import { cn } from "@/lib/utils";
 
 interface ProviderLogoProps {
   name: string;
   logoUrl?: string;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "tile";
   className?: string;
 }
 
 const sizeMap = {
-  sm: { box: "h-5 w-5", img: 20 },
-  md: { box: "h-10 w-10", img: 40 },
-  lg: { box: "h-14 w-14", img: 56 },
+  sm: "h-5 w-5",
+  md: "h-10 w-10",
+  lg: "h-14 w-14",
+  tile: "h-full w-full",
 };
 
 export function ProviderLogo({ name, logoUrl, size = "md", className }: ProviderLogoProps) {
-  const { box, img } = sizeMap[size];
-
   return (
     <div
       className={cn(
-        "flex shrink-0 items-center justify-center overflow-hidden rounded-md bg-black/50",
-        box,
+        "flex shrink-0 items-center justify-center overflow-hidden",
+        sizeMap[size],
         className
       )}
     >
       {logoUrl ? (
-        <Image
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
           src={logoUrl}
           alt={name}
-          width={img}
-          height={img}
-          className="h-[85%] w-[85%] object-contain"
+          className="h-full w-full object-contain"
+          loading="lazy"
+          decoding="async"
         />
       ) : (
         <span className="text-[10px] font-bold uppercase text-white/70">{name.slice(0, 2)}</span>

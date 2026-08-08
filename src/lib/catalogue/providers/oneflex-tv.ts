@@ -6,6 +6,7 @@ import type {
   TVShow,
 } from "../types";
 import { getTmdbImageUrl } from "@/lib/images";
+import { fetchCatalogueApi, getCatalogueApiOrigin } from "../api-origin";
 
 interface OneFlexTV {
   id: number;
@@ -61,7 +62,7 @@ export class OneFlexTVProvider implements TVCatalogueProvider {
 
   constructor() {
     this.baseUrl = process.env.ONEFLEX_API_URL ?? "https://db.1flex.org";
-    this.origin = process.env.ONEFLEX_ORIGIN ?? "https://cinejoy.to";
+    this.origin = getCatalogueApiOrigin();
   }
 
   private async fetchApi<T>(path: string, params?: Record<string, string>): Promise<T> {
@@ -72,20 +73,7 @@ export class OneFlexTVProvider implements TVCatalogueProvider {
       });
     }
 
-    const response = await fetch(url.toString(), {
-      headers: {
-        Accept: "application/json",
-        Origin: this.origin,
-        Referer: `${this.origin}/`,
-      },
-      next: { revalidate: 300 },
-    });
-
-    if (!response.ok) {
-      throw new Error(`1Flex TV catalogue error: ${response.status} ${response.statusText}`);
-    }
-
-    return response.json() as Promise<T>;
+    return fetchCatalogueApi<T>(url.toString(), this.origin);
   }
 
   private imageUrl(path: string | null | undefined, size: "poster" | "backdrop" | "hero"): string {

@@ -7,83 +7,89 @@ export interface WatchProvider {
 
 const tmdbLogo = (path: string) => `https://image.tmdb.org/t/p/w154${path}`;
 
-/** TMDB watch provider IDs (US) with logo fallbacks. */
+/** TMDB watch provider IDs (US) with verified logo paths. */
 export const FEATURED_WATCH_PROVIDERS: WatchProvider[] = [
-  { id: "8", slug: "netflix", name: "Netflix", logoUrl: tmdbLogo("/t2yyOv40HZOePMRfhQY5UdCTTHz.jpg") },
+  { id: "8", slug: "netflix", name: "Netflix", logoUrl: tmdbLogo("/pbpMk2JmcoNnQwx5JGpXngfoWtp.jpg") },
   {
     id: "9",
     slug: "amazon-prime-video",
     name: "Amazon Prime Video",
-    logoUrl: tmdbLogo("/emthp39XA2YScoAU1l4pF0hWr3.jpg"),
+    logoUrl: tmdbLogo("/pvske1MyAoymrs5bguRfVqYiM9a.jpg"),
   },
   {
     id: "337",
     slug: "disney-plus",
     name: "Disney Plus",
-    logoUrl: tmdbLogo("/7rwgM5xEmWT1Bk2H1oKz0NMsY.jpg"),
+    logoUrl: tmdbLogo("/97yvRBw1GzX7fXprcF80er19ot.jpg"),
   },
   {
     id: "350",
     slug: "apple-tv-plus",
     name: "Apple TV+",
-    logoUrl: tmdbLogo("/peURlLlr8MNGcTl8Wz5zEQ8e.jpg"),
+    logoUrl: tmdbLogo("/mcbz1LgtErU9p4UdbZ0rG6RTWHX.jpg"),
   },
-  { id: "15", slug: "hulu", name: "Hulu", logoUrl: tmdbLogo("/bnoewDApCzazbNioRNt8HuxUn53.jpg") },
   {
-    id: "384",
+    id: "2",
+    slug: "apple-tv",
+    name: "Apple TV",
+    logoUrl: tmdbLogo("/SPnB1qiCkYfirS2it3hZORwGVn.jpg"),
+  },
+  { id: "15", slug: "hulu", name: "Hulu", logoUrl: tmdbLogo("/bxBlRPEPpMVDc4jMhSrTf2339DW.jpg") },
+  {
+    id: "1899",
     slug: "hbo-max",
     name: "HBO Max",
-    logoUrl: tmdbLogo("/aS2zvJWzDdHDZekqXsFcWnXjJ2.jpg"),
+    logoUrl: tmdbLogo("/jbe4gVSfRlbPTdESXhEKpornsfu.jpg"),
   },
   {
-    id: "531",
+    id: "2303",
     slug: "paramount-plus",
     name: "Paramount Plus",
-    logoUrl: tmdbLogo("/6uhKBfgmQ9l0AapQogWre7bOjb.jpg"),
+    logoUrl: tmdbLogo("/fts6X10Jn4QT0X6ac3udKEn2tJA.jpg"),
   },
   {
     id: "386",
     slug: "peacock",
     name: "Peacock Premium",
-    logoUrl: tmdbLogo("/gIEdQfZhOSxjjQCUCoVw9B5CH0B.jpg"),
+    logoUrl: tmdbLogo("/2aGrp1xw3qhwCYvNGAJZPdjfeeX.jpg"),
   },
   {
     id: "283",
     slug: "crunchyroll",
     name: "Crunchyroll",
-    logoUrl: tmdbLogo("/8nIk2q0arPmT8D5QG5qB4JmPq7V.jpg"),
+    logoUrl: tmdbLogo("/fzN5Jok5Ig1eJ7gyNGoMhnLSCfh.jpg"),
   },
-  { id: "43", slug: "starz", name: "Starz", logoUrl: tmdbLogo("/gi8T8gU8753U7mj68bg7v8Bjn06.jpg") },
+  { id: "43", slug: "starz", name: "Starz", logoUrl: tmdbLogo("/yIKwylTLP1u8gl84Is7FItpYLGL.jpg") },
   {
     id: "526",
     slug: "amc-plus",
     name: "AMC+",
-    logoUrl: tmdbLogo("/4KAy18EWxl8zIK4YSG0Qvcc5pNu.jpg"),
+    logoUrl: tmdbLogo("/ovmu6uot1XVvsemM2dDySXLiX57.jpg"),
   },
   {
     id: "636",
     slug: "mgm-plus",
     name: "MGM Plus",
-    logoUrl: tmdbLogo("/xTVM8xxo5GWh67ShZZHKDxNqmcy.jpg"),
+    logoUrl: tmdbLogo("/lD7HKUmXDvUya58DceiTA809Zbf.jpg"),
   },
   {
     id: "188",
     slug: "youtube-premium",
     name: "YouTube Premium",
-    logoUrl: tmdbLogo("/fuqemt6EszTbZCVrXpKx3Vl9V1.jpg"),
+    logoUrl: tmdbLogo("/rMb93u1tBeErSYLv79zSTR07UdO.jpg"),
   },
   {
     id: "192",
     slug: "youtube",
     name: "YouTube",
-    logoUrl: tmdbLogo("/lScoBCTquVyPkN1R5WEJX1xeBf.jpg"),
+    logoUrl: tmdbLogo("/pTnn5JwWr4p3pG8H6VrpiQo7Vs0.jpg"),
   },
-  { id: "73", slug: "tubi", name: "Tubi TV", logoUrl: tmdbLogo("/zwaeTLjGpJtS1ZBR7S8x8KWjxA.jpg") },
+  { id: "73", slug: "tubi", name: "Tubi TV", logoUrl: tmdbLogo("/zLYr7OPvpskMA4S79E3vlCi71iC.jpg") },
   {
     id: "300",
     slug: "pluto-tv",
     name: "Pluto TV",
-    logoUrl: tmdbLogo("/4nMKBFNxtKBgG9tNWKiN8n8LAsm.jpg"),
+    logoUrl: tmdbLogo("/dB8G41Q6tSL5NBisrIeqByfepBc.jpg"),
   },
 ];
 

@@ -76,7 +76,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <ProviderBrowse providers={watchProviders} />
+      <ProviderBrowse providers={watchProviders} overlay={heroMovies.length > 0} />
 
       <div className="-mt-2 space-y-8 sm:space-y-10">
         {providerMovies.length > 0 && (
