@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import { ProviderLogo } from "@/components/browse/ProviderLogo";
 import { getCatalogueProvider, getTVProvider } from "@/lib/catalogue";
 import { getFeaturedWatchProviders } from "@/lib/catalogue/provider-logos";
 import { getWatchProviderBySlug } from "@/lib/catalogue/watch-providers";
@@ -41,20 +41,8 @@ export default async function ProviderPage({ params, searchParams }: ProviderPag
     <div className="mx-auto max-w-[1400px] px-5 py-8 sm:px-8 lg:px-10">
       <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
-          <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-white/5">
-            {current.logoUrl ? (
-              <Image
-                src={current.logoUrl}
-                alt={current.name}
-                width={64}
-                height={64}
-                className="h-12 w-12 object-contain"
-              />
-            ) : (
-              <span className="text-lg font-bold text-white/70">
-                {current.name.slice(0, 2).toUpperCase()}
-              </span>
-            )}
+          <div className="flex h-16 w-16 items-center justify-center overflow-hidden rounded-xl bg-white/5 p-2">
+            <ProviderLogo name={current.name} logoUrl={current.logoUrl} size="lg" className="h-full w-full bg-transparent" />
           </div>
           <div>
             <p className="text-sm text-wave-muted">Provider</p>

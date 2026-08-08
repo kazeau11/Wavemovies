@@ -66,11 +66,11 @@ export default async function HomePage() {
           <div className="absolute inset-0 hero-gradient" />
           <div className="relative max-w-xl text-left">
             <span className="inline-block rounded bg-wave-accent/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-widest text-wave-bg">
-              Cinejoy
+              Wave
             </span>
             <h1 className="mt-4 text-4xl font-bold text-white sm:text-5xl">Stream beautifully</h1>
             <p className="mt-3 max-w-md text-[15px] leading-relaxed text-white/60">
-              Browse movies and shows by streaming provider.
+              Discover movies and shows — browse by streaming provider.
             </p>
           </div>
         </section>

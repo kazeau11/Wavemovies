@@ -1,6 +1,6 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { WatchProvider } from "@/lib/catalogue/watch-providers";
+import { ProviderLogo } from "@/components/browse/ProviderLogo";
 import { PAGE_X } from "@/lib/layout";
 import { cn } from "@/lib/utils";
 
@@ -21,23 +21,9 @@ export function ProviderBrowse({ providers, className }: ProviderBrowseProps) {
             <Link
               key={provider.id}
               href={`/provider/${provider.slug}`}
-              className="group flex flex-col items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-all hover:border-wave-accent/40 hover:bg-white/[0.08]"
+              className="group flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] p-4 transition-all hover:border-wave-accent/40 hover:bg-white/[0.08]"
             >
-              <div className="flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg bg-black/40">
-                {provider.logoUrl ? (
-                  <Image
-                    src={provider.logoUrl}
-                    alt={provider.name}
-                    width={48}
-                    height={48}
-                    className="h-10 w-10 object-contain"
-                  />
-                ) : (
-                  <span className="text-xs font-bold text-white/70">
-                    {provider.name.slice(0, 2).toUpperCase()}
-                  </span>
-                )}
-              </div>
+              <ProviderLogo name={provider.name} logoUrl={provider.logoUrl} size="lg" />
               <span className="line-clamp-2 text-center text-xs font-medium text-white/80 group-hover:text-white">
                 {provider.name}
               </span>
